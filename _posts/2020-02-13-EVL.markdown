@@ -1,8 +1,8 @@
 ---
 title: Modeling Extreme Events in Time Series Prediction (KDD 2019)
 date: 2020-02-13 00:00:00 +0000
-categories: [PaperReview]
-tags: [Paper Review, Distiributional Losses, Time Series]
+categories: [Paper Review, Time Series]
+tags: [distiributional losses, time series]
 seo:
   date_modified: 2020-02-13 20:07:02 +0800
 ---

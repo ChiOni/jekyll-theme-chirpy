@@ -1,8 +1,8 @@
 ---
 title: Graph Neural Network (Pytorch)
 date: 2020-02-29 00:00:00 +0000
-categories: [CodeExcercise]
-tags: [Code Excercise, Graph Neural Network, Node Classification]
+categories: [Code Excercise, Graph]
+tags: [graph neural network, node classification]
 seo:
   date_modified: 2020-02-29 20:07:02 +0800
 ---

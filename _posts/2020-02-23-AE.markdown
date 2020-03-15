@@ -1,8 +1,8 @@
 ---
 title: Auto Encoder (Pytorch)
 date: 2020-02-23 00:00:00 +0000
-categories: [CodeExcercise]
-tags: [Code Excercise, Auto Encoder, Anomaly Detection]
+categories: [CodeExcercise, Anomaly Detection]
+tags: [auto encoder, anomaly detection]
 seo:
   date_modified: 2020-02-23 20:07:02 +0800
 ---

@@ -1,8 +1,8 @@
 ---
 title: Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks (ICML 2017)
 date: 2020-02-08 00:00:00 +0000
-categories: [PaperReview]
-tags: [Paper Review, Meta-Learning]
+categories: [Paper Review, Meta Learning]
+tags: [meta learning]
 seo:
   date_modified: 2020-02-08 20:07:02 +0800
 ---

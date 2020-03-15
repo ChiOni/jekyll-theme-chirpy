@@ -8,9 +8,9 @@
 # jekyll-seo-tag settings ??https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 #--------------------------
 
-title: Chirpy                          # the main title
+title: The Chioni Blog                          # the main title
 
-tagline: A text-focused Jekyll theme.  # it will display as the sub-title
+tagline: Keep true to the dreams of thy youth  # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   Keep true to the dreams of thy youth
@@ -34,7 +34,7 @@ social:
   links:
     # The first element serves as the copyright owner's link
     - https://twitter.com/username      # change to your twitter homepage
-    - https://github.com/username       # change to your github homepage
+    - https://github.com/ChiOni # change to your github homepage
     # Uncomment below to add more social links
     - https://www.facebook.com/cldnjsthd
     - https://www.linkedin.com/in/chiwon-song-a8b913187
