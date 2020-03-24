@@ -25,18 +25,20 @@ avatar: /assets/img/sample/avatar.jpg   # support internet resources
 github:
   username: ChiOni # change to your github username
 
-twitter:
-  username: twitter_username            # change to your twitter username
+facebook:
+  username: littlesons
+  
+linkedin: 
+  username: chiwon-song-a8b913187
 
 social:
   name: Chiwon Song                  # it will shows as the copyright 
   email: nupzuk@gamil.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username      # change to your twitter homepage
     - https://github.com/ChiOni # change to your github homepage
     # Uncomment below to add more social links
-    - https://www.facebook.com/cldnjsthd
+    - https://www.instagram.com/littlesons/
     - https://www.linkedin.com/in/chiwon-song-a8b913187
 
 google_site_verification: google_meta_tag_verification # change to your verification string
@@ -79,7 +81,7 @@ theme_mode: dual
 # boolean type, global switch for ToC in posts.
 toc: true
 
-paginate: 10
+paginate: 5
 
 markdown: kramdown
 
