@@ -22,7 +22,6 @@ title: About
 >
 > **2020 KPI:** 영어 말하기 고수, 블로그 꾸준히 업데이트,  논문 써보기, 운동(?)
 >
-> CSS를 건드릴 용기가 나지 않아 여기다 남기는 개인정보  
-> [인스타그램](http://www.instagram.com/littlesons) + [링크드인](http://www.linkedin.com/in/chiwon-song-a8b913187)
+> CSS를 건드릴 용기가 나지 않아 여기다 남기는 개인정보 ([인스타그램](http://www.instagram.com/littlesons), [링크드인](http://www.linkedin.com/in/chiwon-song-a8b913187))
 
 
