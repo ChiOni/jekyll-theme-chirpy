@@ -37,6 +37,8 @@ g.edata['y'] = torch.ones(2, 1)   # 각 엣지에 값이 1인 y라는 피쳐 할
 <img src="/assets/img/pe/dgl/dgltwo.jpg">  
 
 <center><small>g 그래프의 엣지가 가지고 있는 피쳐들</small></center>
+<br/>
+
 ```python
 def double_feature(edges): return {'y': edges.data['y'] * 2}
 g.apply_edges(func=double_feature, edges=1) # index 1의 엣지에 위의 함수를 적용해준다
@@ -45,6 +47,8 @@ g.apply_edges(func=double_feature, edges=1) # index 1의 엣지에 위의 함수
 <img src="/assets/img/pe/dgl/dglthree.jpg">  
 
 <center><small>1번 엣지의 값이 2로 증가했다</small></center>
+<br/>
+
 만약 기존에 존재하던 y 피쳐를 리턴하지 말고 x라는 것을 리턴했을 때는 어떻게 될까?  
 
 만약 edges = 1 이라고 index를 지정하지 않고 그냥 함수를 적용하면 어떻게 될까?
@@ -57,6 +61,8 @@ g.apply_edges(func=new_double_feature)
 <img src="/assets/img/pe/dgl/dglfour.jpg">  
 
 <center><small>기존 y피쳐는 그대로 있고 엣지에 x라는 피쳐가 새로 생성됬다</small></center>
+<br/>
+
 좋다. 그렇다면 지난 번 GAT에 적용했던 코드를 복습하여 확실히 이해해보자.
 
 ```python

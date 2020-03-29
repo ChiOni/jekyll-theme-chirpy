@@ -1,0 +1,13 @@
+---
+title: DeepWalk (Pytorch)
+date: 2020-03-30 00:00:00 +0800
+categories: [Code Excercise, Graph Neural Networks]
+tags: [graph neural network,deepwalk]
+seo:
+  date_modified: 2020-03-30 20:07:02 +0800
+---
+
+오늘도 또 그래프를 본다. 그런데 요번에는 노드를 보려는게 아니라 그래프를 보려고 한다. 여지껏 구현하고 리뷰했던 모델들은 주변의 이웃 노드들을 종합해서 노드를 임베딩하는 방법들이었다. 오늘 보려고 하는 논문은 나무를 넘어 숲을 봐보자. 딥러닝을 이용한 그래프 임베딩 기법 중 할아버지(?) 격에 속하는 DeepWalk (KDD 2014)를 간단히 리뷰하고 구체적으로 구현해보자.  
+
+# DeeapWalk (KDD 2014)
+
