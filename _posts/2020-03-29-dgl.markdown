@@ -7,7 +7,7 @@ seo:
   date_modified: 2020-03-29 20:07:02 +0800
 ---
 
-<b>지난 이야기:</b> (DGL을 활용해서 Graph Attention Network 구현해보기)[https://chioni.github.io/posts/gat/]
+<b>지난 이야기:</b> [DGL을 활용해서 Graph Attention Network 구현해보기](https://chioni.github.io/posts/gat/)
 
 <br/>
 
@@ -15,7 +15,7 @@ Graph Attention Network를 구현하며 <b>DGL (Deep Graph Library)</b>를 사�
 
 # Deep Graph Library API
 
-DGL이 워낙 거대한 프로젝트라 오늘 확인해 볼 부분은 사실 아주아주 사소한 부분이다. (API Reference)[https://docs.dgl.ai/en/0.4.x/api/python/index.html] 여기에 <b>Apply / Batch / Sampler / Graph Store</b> 등에 사용되는 함수들이 모두 모여있다. 전체적인 그림을 보기에는 지식의 깊이가 너무 얕은 이유로 우선 지난 번 사용해봤던 함수들을 살펴보자.
+DGL이 워낙 거대한 프로젝트라 오늘 확인해 볼 부분은 사실 아주아주 사소한 부분이다. [API Reference](https://docs.dgl.ai/en/0.4.x/api/python/index.html) 여기에 <b>Apply / Batch / Sampler / Graph Store</b> 등에 사용되는 함수들이 모두 모여있다. 전체적인 그림을 보기에는 지식의 깊이가 너무 얕은 이유로 우선 지난 번 사용해봤던 함수들을 살펴보자.
 
 <img src="/assets/img/pe/dgl/dglone.jpg">  
 
@@ -37,7 +37,6 @@ g.edata['y'] = torch.ones(2, 1)   # 각 엣지에 값이 1인 y라는 피쳐 할
 <img src="/assets/img/pe/dgl/dgltwo.jpg">  
 
 <center><small>g 그래프의 엣지가 가지고 있는 피쳐들</small></center>
-
 ```python
 def double_feature(edges): return {'y': edges.data['y'] * 2}
 g.apply_edges(func=double_feature, edges=1) # index 1의 엣지에 위의 함수를 적용해준다
@@ -46,7 +45,6 @@ g.apply_edges(func=double_feature, edges=1) # index 1의 엣지에 위의 함수
 <img src="/assets/img/pe/dgl/dglthree.jpg">  
 
 <center><small>1번 엣지의 값이 2로 증가했다</small></center>
-
 만약 기존에 존재하던 y 피쳐를 리턴하지 말고 x라는 것을 리턴했을 때는 어떻게 될까?  
 
 만약 edges = 1 이라고 index를 지정하지 않고 그냥 함수를 적용하면 어떻게 될까?
@@ -59,7 +57,6 @@ g.apply_edges(func=new_double_feature)
 <img src="/assets/img/pe/dgl/dglfour.jpg">  
 
 <center><small>기존 y피쳐는 그대로 있고 엣지에 x라는 피쳐가 새로 생성됬다</small></center>
-
 좋다. 그렇다면 지난 번 GAT에 적용했던 코드를 복습하여 확실히 이해해보자.
 
 ```python
