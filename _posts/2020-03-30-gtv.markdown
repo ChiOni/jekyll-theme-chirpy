@@ -25,38 +25,26 @@ DeepWalk (KDD 2014)는 오늘을 기준으로 2945회 cited 되었는데 그 중
   - 전통적으로 두 그래프 G와 G'의 Isomorphism을 검정하는 알고리즘들
   - **handcrafted** - 도메인 knowledge에 의존하는 한계를 지녔다
 
-
-
-
+<br/>
 
 - **Learning substructure embeddings**
   - GCN, GAT와 같이 Neigbor 구조를 Aggregate하여 노드를 임베딩하는 기법들
   - Entire Graph embedding이 불가능한 구조이기 때문에 Graph Classification에 적용할 수 없다
 
-
-
-
+<br/>
 
 - **Learning task-specific graph embeddings**
   - Labeled Data가 아주 많은 supervised setting에서만 좋은 성능을 발휘한다
 
-
-
-
+<br/>
 
 - **킹왕짱 graph2vec가 가지고 있는 특장점들**
-  
   - Unsupervised representation learning
-  
   - Task-agnostic embeddings
-  
   - Data-driven embeddings
-  
   - Captures structural equivalence
-  
-      
 
-
+<br/>
 
 - **Contribution of graph2vec**
 
