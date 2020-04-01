@@ -22,23 +22,38 @@ DeepWalk (KDD 2014)는 오늘을 기준으로 2945회 cited 되었는데 그 중
 그래프2벡의 목적은 기존의 그래프 커널들과 크게 다르지 않다. 유사한 그래프는 가깝게, 아주 다른 그래프는 멀게.  Graph similarity evaluation Task를 딥러닝의 관점에서, 익숙한 word2vec의 컨셉으로 풀어본 논문이다. 그래프 커널과 관련된 논문을 읽는 것이 항상 버거운 이유는 알아야 하는 사전 지식이 너무 많고 무겁기 때문이다. 참조되어있는 논문들이 아주 무시무시하지만 Intro는 그냥 짧게 요약하고 넘어가버리자.
 
 - **Graph Kernels and handcrafted features**
+  
   - 전통적으로 두 그래프 G와 G'의 Isomorphism을 검정하는 알고리즘들
   - **handcrafted** - 도메인 knowledge에 의존하는 한계를 지녔다
+  
 - **Learning substructure embeddings**
+  
   - GCN, GAT와 같이 Neigbor 구조를 Aggregate하여 노드를 임베딩하는 기법들
   - Entire Graph embedding이 불가능한 구조이기 때문에 Graph Classification에 적용할 수 없다
+  
 - **Learning task-specific graph embeddings**
+  
   - Labeled Data가 아주 많은 supervised setting에서만 좋은 성능을 발휘한다
+  
+      
 
 
 
 
 
 - **킹왕짱 graph2vec가 가지고 있는 특장점들**
+  
   - Unsupervised representation learning
+  
   - Task-agnostic embeddings
+  
   - Data-driven embeddings
+  
   - Captures structural equivalence
+  
+      
+
+
 
 - **Contribution of graph2vec**
 
