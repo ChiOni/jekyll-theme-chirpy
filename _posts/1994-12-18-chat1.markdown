@@ -1,10 +1,10 @@
 ---
 title: 글의 색감
-date: 0000-00-00 00:00:01 +0000
+date: 1994-12-18 00:00:01 +0000
 categories: [Chat, Diary]
 tags: [chat]
 seo:
-  date_modified: 0000-00-00 00:00:01 +0000
+  date_modified: 1994-12-18 00:00:01 +0000
 ---
 
 <img src="/assets/img/chat/chatone.jpg">  
