@@ -21,6 +21,8 @@ DeepWalk (KDD 2014)는 오늘을 기준으로 2945회 cited 되었는데 그 중
 
 그래프2벡의 목적은 기존의 그래프 커널들과 크게 다르지 않다. 유사한 그래프는 가깝게, 아주 다른 그래프는 멀게.  Graph similarity evaluation Task를 딥러닝의 관점에서, 익숙한 word2vec의 컨셉으로 풀어본 논문이다. 그래프 커널과 관련된 논문을 읽는 것이 항상 버거운 이유는 알아야 하는 사전 지식이 너무 많고 무겁기 때문이다. 참조되어있는 논문들이 아주 무시무시하지만 Intro는 그냥 짧게 요약하고 넘어가버리자.
 
+<br/>	
+
 - **Graph Kernels and handcrafted features**
   - 전통적으로 두 그래프 G와 G'의 Isomorphism을 검정하는 알고리즘들
   - **handcrafted** - 도메인 knowledge에 의존하는 한계를 지녔다
@@ -69,7 +71,7 @@ such that (n1, n2) ∈ Esg iff (µ(n1), µ(n2)) ∈ E</b>가 존재하면 sg가 
 
 # <b>Background</b>
 
-#### <b>Skipgram - Loss</b>
+#### <b>Skipgram Loss</b>
 
 앞서 서문에서 graph2vec이 word2vec의 컨셉을 계승한다는 말을 했다. word2vec 예기를 하려면 무엇보다도 <b>skipgram-loss</b>를 이해하고 넘어갈 필요가 있다. 우선 skipgramm loss가 목표하는 컨셉적인 목표를 읽어보자. <b>*the words appearing in similar contexts tend to have similar
 meanings and hence should have similar vector representations.*</b> 구체적으로 봐보자. 단어를 임베딩할건데, 근처에서 서로 자주 나오는 단어끼리 비슷한 벡터로 임베딩이 될 것이다. 임베딩 세계에서 비슷하다는 소리는 내적했을 때 값을 최대화하겠다는 것을 의미한다. 수식으로 봐보자.
@@ -80,9 +82,25 @@ meanings and hence should have similar vector representations.*</b> 구체적으
 
 기본적으로 word2vec이 NLP Task이기 때문에 주어진 데이터는 라벨링 된 순서가 있는 단어들의 집합이다. 최대화하고자 목적하는 식은, 단어들간의 조건부 확률이 실제 데이터셋의 빈도와 동일해지기를 바라는 것이다. 단어의 등장이 독립적이라는 가정하에 조건부 확률을 곱셈으로 치환하는 것이 가능해진다. 그럼 결국 최대화하고자 목적하는 확률식을 (타겟 단어 임베딩 ·  조건 단어 임베딩) 나누기 sum(타겟 단어 임베딩 · 모든 단어 임베딩) 으로 표현할 수 있게 된다. 바로 이어서 구체적으로 이 확률식을 어떻게 학습하는가에 대한 전략을 살펴보자.  
 
-#### <b>Negative Sampling</b>
+#### <b>Skipgram Model</b>
 
+<img src="/assets/img/pr/gtv/gtvfour.jpg">  
 
+아무 기교를 부리지 않은 본연의 skipgram model은 위의 이미지와 같이 생겼다. 타겟이 되는 단어를 One-hot Encoding하여 인풋으로 모델에 집어넣은 후, 다른 단어들에 대한 확률값을 아웃풋으로 내놓도록 네트워크를 구축한다. 아주 단순한 예를 들어 <b>I LOVE YOU</b> 라는 문장이 있다고 생각해보자. 그렇다면 I를 인풋으로 넣는다는 것은 원 핫 인코딩한 [1,0,0] 이 모델의 인풋으로 들어간다는 것이고, 가까이 있는 LOVE라는 단어에 높은 확률이 나오는 [0.2, 0.6, 0.2] 정도의 아웃풋이 나오는 것이 이상적이다. 모델의 학습 전략을 정리하자면.
+
+1. 모든 문장에 대해 연속된 단어들이 같이 들어가 있는 바구니를 만든다. ## (I,LOVE) , (LOVE,YOU) 
+2. 원 핫 인코딩한 인풋이 모델을 통과한 후, 합쳐서 합이 1인 확률값을 내뱉는 네트워크를 설계한다.
+3. 인풋과 같은 바구니에 들어가 있는 단어들이 높은 확률값을 가지도록 모델을 업데이트한다.
+
+여기에다가 이제 모델의 학습의 전략을 용이하게 만드는 여러가지 기교들이 들어갈 수 있다. 바구니의 사이즈를 2보다 더 크게 설정할 수도 있고, Negative Sampling이라는 전략을 통해 적은 양의 단어들만 학습에 참조할 수도 있다. 더 깊은 내용은 사실 graph2vec을 이해하기 위해서 꼭 필요하지는 않으니 일단 넘어가자.  
+
+#### <b>doc2vec</b>
+
+<img src="/assets/img/pr/gtv/gtvfive.jpg">  
+
+아주 참신한 아이디어다. doc2vec 어떤 문단 d를 어떻게 임베딩할 것인가에 대한 전략이다. 각 문단 d에는 어떤 단어w들의 수열 c(d)로 표현할 수 있다. 우리가 Skip gram model을 통해 목적하는 것은 특정 문단의 임베딩이 그 문단에 등장하는 단어들의 임베딩과 비슷해지는 것이다. 분모는 모든 문단들의 단어들이 속해있고, 분자에는 해당 문단의 단어들만 포함되니, 유사한 단어들이 많이 포함된 문단끼리는 비슷한 임베딩을 갖게 될 것을 기대할 수 있다.  
+
+# <b>LEARNING GRAPH REPRESENTATION</b>
 
 
 
