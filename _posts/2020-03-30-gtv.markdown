@@ -1,0 +1,51 @@
+---
+title: grpah2vec (MLG 2017)
+date: 2020-03-30 00:00:00 +0800
+categories: [Paper Review, Graph Neural Networks]
+tags: [graph neural network,graph embedding]
+seo:
+  date_modified: 2020-03-30 20:07:02 +0800
+---
+
+<img src="/assets/img/pe/gtv/gtvone.jpg">  
+
+DeepWalk (KDD 2014)는 오늘을 기준으로 2945회 cited 되었는데 그 중 1300회 이상이 작년 한 해동안 쌓인 숫자이다. 그만큼 딥러닝과 그래프 분야의 논문들이 쏟아져 나오고 있다는 말이겠다. 딥워크 뿐 아니라 교과서처럼 읽히는 4~5년전 논문들에 대한 cited가 가파르게 오르고 있는데 시장의 파이도 그만큼 커졌을까?  성능의 개선이 아니라 사고의 혁신을 주제로 한 연구는 얼마나 있었을까?  막상 논문을 쓰려니 나에게 떠오르는 생각들이, 재미가 없다. 2020년의 cited를 올려주고픈 나의 목표가, 목적 없는 연구에 대한 회의감의 주체가 되지 않았으면 좋겠다.
+
+<center><small> 서론은 본론과 아무 연관이 없습니다</small></center>
+
+
+# graph2vec (MLG 2017)
+
+오늘도 또 그래프를 본다. 그런데 요번에는 노드를 보려는게 아니라 그래프를 보려고 한다. 여지껏 구현하고 리뷰했던 모델들은 주변의 이웃 노드들을 종합해서 노드를 임베딩하는 방법들이었다. 오늘은 나무를 넘어 숲을 봐보자. 노드말고 그래프를 임베딩해보자. 딥러닝을 이용한 그래프 임베딩 기법 중 아마 가장 유명한(?) graph2vec(MLG 2017)를 리뷰한다.  
+
+
+
+그래프2벡의 목적은 기존의 그래프 커널들과 크게 다르지 않다. 유사한 그래프는 가깝게, 아주 다른 그래프는 멀게.  Graph similarity evaluation Task를 딥러닝의 관점에서, 익숙한 word2vec의 컨셉으로 풀어본 논문이다. 그래프 커널과 관련된 논문을 읽는 것이 항상 버거운 이유는 알아야 하는 사전 지식이 너무 많고 무겁기 때문이다. 참조되어있는 논문들이 아주 무시무시하지만 Intro는 그냥 짧게 요약하고 넘어가버리자.
+
+- **Graph Kernels and handcrafted features**
+  - 전통적으로 두 그래프 G와 G'의 Isomorphism을 검정하는 알고리즘들
+  - **handcrafted** - 도메인 knowledge에 의존하는 한계를 지녔다
+- **Learning substructure embeddings**
+  - GCN, GAT와 같이 Neigbor 구조를 Aggregate하여 노드를 임베딩하는 기법들
+  - Entire Graph embedding이 불가능한 구조이기 때문에 Graph Classification에 적용할 수 없다
+- **Learning task-specific graph embeddings**
+  - Labeled Data가 아주 많은 supervised setting에서만 좋은 성능을 발휘한다
+
+<br/>
+
+- **킹왕짱 graph2vec가 가지고 있는 특장점들**
+  - **Unsupervised representation learning**
+  - **Task-agnostic embeddings**
+  - **Data-driven embeddings**
+  - **Captures structural equivalence**
+
+
+
+
+
+
+
+
+
+
+
