@@ -13,12 +13,11 @@ DeepWalk (KDD 2014)는 오늘을 기준으로 2945회 cited 되었는데 그 중
 
 <center><small> 서론은 본론과 아무 연관이 없습니다</small></center>
 
-
 # graph2vec (MLG 2017)
 
 오늘도 또 그래프를 본다. 그런데 요번에는 노드를 보려는게 아니라 그래프를 보려고 한다. 여지껏 구현하고 리뷰했던 모델들은 주변의 이웃 노드들을 종합해서 노드를 임베딩하는 방법들이었다. 오늘은 나무를 넘어 숲을 봐보자. 노드말고 그래프를 임베딩해보자. 딥러닝을 이용한 그래프 임베딩 기법 중 아마 가장 유명한(?) graph2vec(MLG 2017)를 리뷰한다.  
 
-
+<br/>
 
 그래프2벡의 목적은 기존의 그래프 커널들과 크게 다르지 않다. 유사한 그래프는 가깝게, 아주 다른 그래프는 멀게.  Graph similarity evaluation Task를 딥러닝의 관점에서, 익숙한 word2vec의 컨셉으로 풀어본 논문이다. 그래프 커널과 관련된 논문을 읽는 것이 항상 버거운 이유는 알아야 하는 사전 지식이 너무 많고 무겁기 때문이다. 참조되어있는 논문들이 아주 무시무시하지만 Intro는 그냥 짧게 요약하고 넘어가버리자.
 
@@ -31,15 +30,51 @@ DeepWalk (KDD 2014)는 오늘을 기준으로 2945회 cited 되었는데 그 중
 - **Learning task-specific graph embeddings**
   - Labeled Data가 아주 많은 supervised setting에서만 좋은 성능을 발휘한다
 
-<br/>
+
+
+
 
 - **킹왕짱 graph2vec가 가지고 있는 특장점들**
-  - **Unsupervised representation learning**
-  - **Task-agnostic embeddings**
-  - **Data-driven embeddings**
-  - **Captures structural equivalence**
+  - Unsupervised representation learning
+  - Task-agnostic embeddings
+  - Data-driven embeddings
+  - Captures structural equivalence
 
+- **Contribution of graph2vec**
 
+  - Propose an unsupervised representation learning technique to learn
+
+    distributed representation of arbitrary sized graphs
+
+  - Demonstrate graph2vec could significantly outperform substructure representation
+
+    learning algorithms and highly competitive to SOTA kernels on graph classification
+
+  - Make an efficient implementaion of graph2vec at [Github/graph2vec](https://github.com/MLDroid/graph2vec_tf)
+
+# <b>PROBLEM STATEMENT</b>
+
+graph2vec이 해결하고자 하는 메인의 퀘스트는 <b>Graph Classification</b>이다. 한 도메인에 여러개의 그래프가 존재할 때, 각 그래프가 어떤 라벨을 가지고 있는 맞추는 문제이다.  앞으로 <b>그래프는 G = (N, E, λ)</b> 이렇게 표현한다. 여기서 N은 노드를, E는 엣지를, λ는 노드의 라벨이라고 정의한다. 라벨이 없는 경우는 그냥 (N, E)로 생각하면 된다.  물론 엣지에도 라벨이 있을 수 있는데, 그런 경우에는 G = (N, E, λ, η) 이렇게 표현해주자.  
+
+<img src="/assets/img/pe/gtv/gtvtwo.jpg">  
+
+그래프에는 <b>서브 그래프 sg</b>가 존재할 수 있는데, <b>µ : N(sg) → N
+such that (n1, n2) ∈ Esg iff (µ(n1), µ(n2)) ∈ E</b>가 존재하면 sg가 그래프 G의 서브그래프라고 한다. 어렵게 생각할 것 없이, 작은 그래프의 구조가 큰 그래프의 어딘가에 딱 들어맞게 존재한다면, 작은 그래프가 큰 그래프의 서브그래프라고 보면 된다. 서브그래프를 찾는 전략은 조금 무식하다. 기준이 되는 <b>degree d의 rooted sub-graph</b>를 미리 설정해준 뒤, 모든 노드에서 d-degree에 가능한 모든 경로를 나열한 뒤, 루프를 돌며 해당 노드가 서브그래프의 기준 노드가 될 수 있는지 검정한다.
+
+# <b>Background</b>
+
+#### <b>Skipgram - Loss</b>
+
+앞서 서문에서 graph2vec이 word2vec의 컨셉을 계승한다는 말을 했다. word2vec 예기를 하려면 무엇보다도 <b>skipgram-loss</b>를 이해하고 넘어갈 필요가 있다. 우선 skipgramm loss가 목표하는 컨셉적인 목표를 읽어보자. <b>*the words appearing in similar contexts tend to have similar
+meanings and hence should have similar vector representations.*</b> 구체적으로 봐보자. 단어를 임베딩할건데, 근처에서 서로 자주 나오는 단어끼리 비슷한 벡터로 임베딩이 될 것이다. 임베딩 세계에서 비슷하다는 소리는 내적했을 때 값을 최대화하겠다는 것을 의미한다. 수식으로 봐보자.
+
+<img src="/assets/img/pe/gtv/gtvthree.jpg">  
+
+얼마전에 numpy의 결과물이 납득가지 않아서 깃헙에 이슈업을 해봤는데, 짧은 문장 한 두 개를 쓰면서도 구글 번역기를 돌려봐야 될 정도로 영어가 밉고 어렵다. 그럼에도 불구하고 논문을 읽어볼때는, 특히 수식의 근처에서는 꾸역 꾸역 한 문장씩 읽어가며 넘어갈 필요가 있다.  
+
+기본적으로 word2vec이 NLP Task이기 때문에 주어진 데이터는 라벨링 된 순서가 있는 단어들의 집합이다. 최대화하고자 목적하는 식은, 단어들간의 조건부 확률이 실제 데이터셋의 빈도와 동일해지기를 바라는 것이다. 단어의 등장이 독립적이라는 가정하에 조건부 확률을 곱셈으로 치환하는 것이 가능해진다. 그럼 결국 최대화하고자 목적하는 확률식을 (타겟 단어 임베딩 ·  조건 단어 임베딩) 나누기 sum(타겟 단어 임베딩 · 모든 단어 임베딩) 으로 표현할 수 있게 된다. 바로 이어서 구체적으로 이 확률식을 어떻게 학습하는가에 대한 전략을 살펴보자.  
+
+#### <b>Negative Sampling</b>
 
 
 
