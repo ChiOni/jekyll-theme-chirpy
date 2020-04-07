@@ -129,17 +129,66 @@ doc2vec와 알고리즘 역시 유사하다. skipgram modeling을 위해 여러 
 <b>Algorithm</b>
 
 0. 우선 모든 그래프를 δ 크기로 랜덤하게 임베딩 해준다.
-
 1. 모든 그래프를 학습에 사용하는 것이 아니라 업데이트 될 때마다 기준이 될 그래프 샘플이 계속 바뀐다.
-2. 각 G(i) 그래프의 모든 n 노드에 대해 
+2. 각 G(i) 그래프의 모든 n 노드에 대해 rooted sub graph를 추출하고 skipgram modeling을 수행한다.
 
+<br/>
 
+WL - Kernel을 통해 rooted subgraph를 추출하는 알고리즘이 따로 서술되어있다.
 
+<img src="/assets/img/pr/gtv/gtvseven.jpg">  
 
+슈도 코드를 봐도 잘 이해가 가지 않아 [깃헙](https://github.com/MLDroid/graph2vec_tf/blob/master/src/make_graph2vec_corpus.py)의 코드를 가져와봤다. (알고리즘의 이해에 필요없는 부분들은 삭제했습니다) 아주 길고 복잡한데, 함수 하나 하나를 보기 이전에 메인이 되는 **wlk_relabel_and_dump_memory_version** 모듈을 살펴보자.
 
+```python
+def wlk_relabel_and_dump_memory_version(fnames,max_h,node_label_attr_name='Label'):
+    global label_to_compressed_label_map
 
+    graphs = [nx.read_gexf(fname) for fname in fnames]
+    graphs = [initial_relabel(g,node_label_attr_name) for g in graphs]
 
+    for it in xrange(1, max_h + 1):
+        label_to_compressed_label_map = {}
+        graphs = [wl_relabel(g, it) for g in graphs]
 
+    for fname, g in zip(fnames, graphs):
+        dump_sg2vec_str(fname, max_h, g)
+```
 
+위에서 부터 쭉 읽어보면,
 
+1. 그래프를 불러오고
+2. initial labeling을 수행하고
+3. 그래프를 하나씩 돌아가며 **wl_relabel**을 수행한다. 
+4. **dump_sg2vec_str**을 통해 각 노드의 intended subgraph를 얻는다.
+
+```python
+def wl_relabel(g, it):
+    global label_to_compressed_label_map
+
+    prev_iter = it - 1
+    for node in g.nodes():
+        prev_iter_node_label = get_int_node_label(g.nodes[node]['relabel'][prev_iter])
+        node_label = [prev_iter_node_label]
+        neighbors = list(nx.all_neighbors(g, node))
+        neighborhood_label = sorted([get_int_node_label(g.nodes[nei]['relabel'][prev_iter]) for nei in neighbors])
+        node_neighborhood_label = tuple(node_label + neighborhood_label)
+        if not label_to_compressed_label_map.has_key(node_neighborhood_label):
+            compressed_label = len(label_to_compressed_label_map) + 1
+            label_to_compressed_label_map[node_neighborhood_label] = compressed_label
+            g.node[node]['relabel'][it] = str(it) + '+' + str(compressed_label)
+        else:
+            g.node[node]['relabel'][it] = str(it) + '+' + str(label_to_compressed_label_map[node_neighborhood_label])
+    
+    nx.write_gexf(g,opfname)
+
+```
+
+모든 함수 하나하나를 뜯어보지는 말되 **wl_relabel**의 알고리즘은 순서대로 이해해보자.
+
+- get_int_node_label을 통해 이전 hob에서 취합한 sub graph 구조를 정수로 치환한다.
+  - '3+1' (3노드 1노드) -> 31로 치환됨
+  - '4+3' (4노드 3노드) -> 43로 치환됨
+- 새로운 라벨을 얻는 과정을 기준 노드 뿐 아니라 기준 노드의 이웃들에게도 수행한다.
+- 새로 얻어진 라벨들을 다시 '+' 로 묶어준다. ('31+42'가 새로운 기준 노드의 라벨이 된다)
 
