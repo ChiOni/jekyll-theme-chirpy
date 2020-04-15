@@ -11,7 +11,7 @@ seo:
 
 # <b>Shiny in R</b> 
 
-<img src="/assets/img/wt/dbutil/dbutilone.jpg">  
+<img src="/assets/img/wt/shiny/shinyone.jpg">  
 
 <center><small>배포할 때 한글 깨짐으로 매우 짜증났던 기억이 난다</small></center>
 Shiny는 반응형의 웹 페이지를 쉽게 만들 수 있게 도와주는 R 패키지다. 제작년에 정부 교육을 들을 때 프로젝트로 만들어 볼 기회가 있었는데, html이나 css 같은 것들을 아무것도 모르는 상태로도 웹 어딘가에 나의 결과물을 배포할 수 있다는 것이 신기했다. 물론 디자인이나 기능적인 측면에서의 자유도는 아직 제약이 좀 있는 것 같지만 `통계 분석 결과물을 시각적으로 쉽게 공유하자` 취지에서는 충분하다 생각한다. 아주 간단하게만 어떻게 Shiny가 돌아가는지 살펴보자.
@@ -93,7 +93,7 @@ shinyApp(ui, server)
 
 이렇게 ui안에 여러 도구를 통해 조합해 준 페이지의 와꾸는 아래와 같다.
 
-<img src="/assets/img/wt/dbutil/dbutiltwo.jpg">  
+<img src="/assets/img/wt/shiny/shinytwo.jpg">  
 
 
 
