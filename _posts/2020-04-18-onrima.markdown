@@ -1,0 +1,84 @@
+---
+title: Online ARIMA Algorithms for Time Series Prediction (AAAI 2016)
+date: 2020-04-18 00:00:00 +0800
+categories: [Paper Review, Regression]
+tags: [time series,arima]
+seo:
+  date_modified: 2020-04-18 20:07:02 +0800
+
+---
+
+<img src="/assets/img/pr/onrima/onrimaone.jpg">  
+
+# <b>Online ARIMA</b>
+
+처음에 제목을 읽었을 때, Online ARIMA? 온라인에서 만들어지는 시계열을 예측하는건가? 싶었다. 물론 그런 단순한 작명은 아니었다고 한다. 설명이 많지는 않지만 위키피디아에 따르면 online model이란,
+
+> An **online model** is a mathematical **model** which tracks and mirrors a plant or process in real-time, and which is implemented with some form of automatic adaptivity to compensate for **model** degradation over time
+
+수학적인 모델링을 통해 실시간으로 최적화되는 모델을 통칭하는 용어라고 보면 되나 보다. 그럼 online이 아닌 모델은 무엇인가? 멀리 갈 것 없이 기존의 ARIMA 모델을 보면 된다. 논문에 따르면 ARIMA는 `However, its parameters are estimated in a batch manner`. 학습된 상태에서 새로운 데이터에 대한 국소적인 업데이트가 가능한 구조가 아니다.  parameter를 도출하는 기존의 least squares / maximum likelihood 베이스의 방법들은 모든 데이터에 대한 접근을 선행해야 하기 때문이다. 논문에서 ARIMA 모델링을 어떻게 Online model optimization task로 치환하였는지는 뒤에서 구체적으로  봐보자.
+
+<br/>
+
+#### <b> Linear Regression</b>
+
+논문을 살펴보기 전에, 모델 혹은 데이터가 Linear 하다는 것의 의미를 알고 넘어가자. ARMA는 모델이 Linear하다는 것을 가정하고 있어 현실에 적용하기에 무리가 있었고, <b>Integrated</b> term을 추가한 ARIMA 모델이 등장하게 되었다. Integrated term을 통해 모델을 Linear하게 만드는 것은 무슨 뜻일까.
+
+> *Integrated (I)* represents the differencing of raw observations to allow for the time series to become stationary, i.e., data values are replaced by the difference between the data values and the previous values
+
+<br/>
+
+그보다 우선하여 Linear regression이란 무엇일까? 사실 이름만 보면 <b>linear regression은 직선? non linear regression은 곡선인가?</b> 오해할 수 있다. 오해를 풀기 위해 linear regression과 non linear regression의 정의를 살펴보면,  
+
+> In statistics, a regression model is linear when all terms in the model are one of the following:
+>
+> - The constant
+> - A parameter multiplied by an independent variable
+
+즉, 모델의 linearlity는 Output의 형태가 아니라 parameter의 linearlity에서 비롯한다.
+
+<br/>
+
+![Y =\beta _{0} + \beta _{1}X_{1} + \beta _{2}X_{1}^2](https://s0.wp.com/latex.php?latex=Y+%3D%5Cbeta+_%7B0%7D+%2B+%5Cbeta+_%7B1%7DX_%7B1%7D+%2B+%5Cbeta+_%7B2%7DX_%7B1%7D%5E2&bg=ffffff&fg=000&s=0)
+
+예를 들어, 위의 Y를 실제로 그려보면 곡선이 나오지만 이것은 Linear Regression이다. 모든 파라미터 베타들이 상수거나 혹은 independent variable에 곱해져있기 때문이다.  (1, X, X^2는 서로 linearly independent하다)  정리하자면 주어진 Y를 표현할 때, 모든 파라미터들을 independent variable 단위로 쪼개서 equation을 생성할 수 있다면 우리는 linear modeling을 수행한 것이다.  
+
+<img src="/assets/img/pr/onrima/onrimatwo.jpg">  
+
+ARMA 모델로 돌아와보자. 실측치와 predict error를 몇 개까지 볼 것인지를 조정하며 여러 형태의 ARMA 모델이 등장할 수 있다. 예를 들어, ARMA(2,1)을 살펴보면 파라미터 파이1과 파이2가 각각 y(t-1)과 y(t-2)에 곱해져 있다는 것을 볼 수 있다. 근데 만약 y가 non -stationary 하다면 어떻게 될까. 두 변수간의 correlation coefficient가 0이 아니라면 그 둘은 더 이상 indendent하다고 볼 수 없고, ARMA 모델은 더 이상 linear modeling이 아니다.
+
+<br/>
+
+그렇다면 integrated term을 통한 <b>differencing of raw observations</b>은 어떻게 데이터를 stationary하게 만들까? 우선 stationary의 정의를 살펴보면, 
+
+> In mathematics and statistics, a stationary process is a stochastic process whose unconditional joint probability distribution does not change when shifted in time
+
+즉, y의 평균과 분산 그리고 correlation이 x가 변함에 따라 변하지 않아야 한다. y = x + b라는 식을 생각해보자. 해당 직선은 x가 증가함에 따라 분산은 변하지 않지만 y의 평균이 지속해서 증가한다. 따라서 y는 stationary하지 않다. 근데 만약 x를 x'으로 바꾸고 (x'(t)  =  x(t) - x(t-1)) ,   y = x' + b를 그려보면 어떨까. 해당 식의 y는 항상 평균이 b이고 분산이 0인 stationary한 상태가 된다. 이렇게 데이터를 한 번 혹은 그 이상으로 차분하여 데이터를 stationary한 상태로 바꾸어 ARMA 모델의 linear modeling assumption을 가능하게 하는 것이 ARIMA 모델이라고 볼 수 있다.
+
+<br/>
+
+#### <b>Contribution of paper</b>
+
+다시 논문의 리뷰로 돌아와 기여한 바를 살펴본다.
+
+- Propose a novel online learning method to estimate the parameters of ARIMA models by
+  reformulating it into a full information online optimization task
+- Theoretically, we give the regret bounds which show that the solutions produced by our method asymptotically approaches the best ARIMA model in hindsight
+- Experimental result empirically validates that online ARIMA algorithms considerably outperform the existing online ARMA algorithms
+
+<br/>
+
+# <b>Online ARIMA Algorithm</b>
+
+
+
+
+
+
+
+
+
+
+
+
+
