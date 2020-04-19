@@ -22,7 +22,7 @@ seo:
 
 #### <b> Linear Regression</b>
 
-논문을 살펴보기 전에, 모델 혹은 데이터가 Linear 하다는 것의 의미를 알고 넘어가자. ARMA는 모델이 Linear하다는 것을 가정하고 있어 현실에 적용하기에 무리가 있었고, <b>Integrated</b> term을 추가한 ARIMA 모델이 등장하게 되었다. Integrated term을 통해 모델을 Linear하게 만드는 것은 무슨 뜻일까.
+논문을 살펴보기 전에, 모델 혹은 데이터가 Linear 하다는 것의 의미를 알고 넘어가자. ARMA는 모델이 Linear하다는 것을 가정하고 있어 현실에 적용하기에 무리가 있었고, <b>Integrated term</b>을 추가한 ARIMA 모델이 등장하게 되었다. Integrated term을 통해 모델을 Linear하게 만드는 것은 무슨 말일까.
 
 > *Integrated (I)* represents the differencing of raw observations to allow for the time series to become stationary, i.e., data values are replaced by the difference between the data values and the previous values
 
@@ -45,7 +45,7 @@ seo:
 
 <img src="/assets/img/pr/onrima/onrimatwo.jpg">  
 
-ARMA 모델로 돌아와보자. 실측치와 predict error를 몇 개까지 볼 것인지를 조정하며 여러 형태의 ARMA 모델이 등장할 수 있다. 예를 들어, ARMA(2,1)을 살펴보면 파라미터 파이1과 파이2가 각각 y(t-1)과 y(t-2)에 곱해져 있다는 것을 볼 수 있다. 근데 만약 y가 non -stationary 하다면 어떻게 될까. 두 변수간의 correlation coefficient가 0이 아니라면 그 둘은 더 이상 indendent하다고 볼 수 없고, ARMA 모델은 더 이상 linear modeling이 아니다.
+ARMA 모델로 돌아와보자. 실측치와 predict error를 몇 개까지 볼 것인지를 조정하며 여러 형태의 ARMA 모델이 등장할 수 있다. 예를 들어, ARMA(2,1)을 살펴보면 파라미터 파이1과 파이2가 각각 y(t-1)과 y(t-2)에 곱해져 있다는 것을 볼 수 있다. 근데 만약 y가 non -stationary 하다면 어떻게 될까. 두 변수간의 correlation coefficient가 0이 아니라면 그 둘은 더 이상 independent하다고 볼 수 없고, ARMA 모델은 더 이상 linear modeling이 아니다.
 
 <br/>
 
@@ -70,13 +70,35 @@ ARMA 모델로 돌아와보자. 실측치와 predict error를 몇 개까지 볼 
 
 # <b>Online ARIMA Algorithm</b>
 
+<img src="/assets/img/pr/onrima/onrimathree.jpg">  
+
+ARIMA가 어떻게 predict에 사용되는지 수식적으로 확인해보자. 노테이션이 조금 헷갈릴 수 있지만 (1) 식의 differential(d) 처럼 표현되어 있는 것은 주어진 sequence X가 d 번 차분되었다는 것이다. X의 형태에 따라 몇 번의 차분으로 stationary한 상태가 될 수 있는지 달라지기 때문에 d는 학습되어야 하는 parameter 중 하나이다. 주기성이 없다면, ARIMA에 필요한 parameter는 3가지다.  
+
+**ARIMA(k,d,q)**
+
+- k: 차분된 데이터를 과거 몇 개까지 활용할지
+- d: 데이터를 stationary하게 만들기 위한 차분의 횟수
+- q: 이전의 예측값과  실측값의 오차를 과거 몇 개까지 활용할지
+
+<br/>
+
+(2)번 식은 차분된 데이터를 통해 모델링 된 ARIMA를 실제로 predict에 활용한 수식이다. 차분된 상황에서의 시점 t에서의 값을 (1)식을 통해 얻고, stationary되기 위해 차분된 값을 다시 역으로 더해 실제값에 대한 예측을 수행한다.  
+
+ <img src="/assets/img/pr/onrima/onrimafour.jpg">
+
+online ARIMA 알고리즘의 목적함수는 일반화하여 위와 같이 표현할 수 있다. 새로운 T개의 data에 대한 실측값과 예측값의 차이를 최소화하도록 ARIMA의 parameter가 업데이트 될 것이다. 그런데, online 모델링 process에서 parameter q에 대해서는 학습할 수 없다. 과거의 실제값에 대한 정보는 주어지지만 예측값에 대해서는 알 수 없기 때문에 이전 시점의 오차를 모델링에 활용할 수 없기 때문이다. <small>(MA process는 white noise를 사용하는 모델링이기 때문에 둘 이상의 미래에 대한 예측이 불가능하다)</small> 따라서 <b>ARIMA(k, d, q)를 근사하는 modified ARIMA(k+m, d, 0)</b>가 대신 사용될 것이다. 
+
+> If the ARMA process is causal and invertible, 
+>
+> it can be written either as AR (MA) process of infinite order
 
 
 
+ <img src="/assets/img/pr/onrima/onrimafive.jpg">
 
+이제 남은 과제는 기존 모델을 잘 근사할 수 있는 m을 찾는 일과, m+k개의 AR parameter를 어떻게 최적화 할 것인가이다. convex - optimization solver는 여러 알고리즘이 존재하지만, 논문에서 제시하는 두 가지 방법은 <b>newton-step & gradient descent</b> 이다. 두 알고리즘을 통해 어떻게 모델의 parameter를 적합하고, 각 알고리즘의 loss upper bound는 어떻게 이론적으로  추정되는지 살펴본다.  
 
-
-
+# <b>ARIMA Online Newton - Step (ARIMA-ONS)</b>
 
 
 
