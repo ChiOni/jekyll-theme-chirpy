@@ -110,17 +110,15 @@ Newton's method는 iterative한 과정을 통해 위의 Task를 수행하는 것
 
   - 이것이 무엇이냐면.. [여기](http://www.statsmakemecry.com/smmctheblog/confusing-stats-terms-explained-heteroscedasticity-heteroske.html)를 봐보자.
 
+  - heteroscedastic은 시계열에서 일반적으로 changing or unequal variance across the series를 뜻하는데
+
   - 요약하자면 error가 independent value의 값에 독립적인지 확인하는 방식이다.
 
   - ARMA process를 통해 얻어진 노이즈와 같은 분포를 갖도록 AR 모델을 수정하는 것(?)이다.
-
+  
     <small> 라고 추측한다.. 아마 [여기]([file:///C:/Users/littl/Downloads/12135-55701-1-PB%20(2).pdf](file:///C:/Users/littl/Downloads/12135-55701-1-PB (2).pdf) 논문의 내용으로 설명되는 것이라고 추측한다..</small>
 
 사실 그 뒤의 업데이트 부분은 매우 일반적이다. 로스는 error의 분산을 통해 계산하고, newton's method의 방식으로 얻어진 t를 미리 설정해놓은 learning-rate만큼 곱하여 기존의 parameter를 업데이트 해준다. 이런 작업은 예측에 사용한 모든 T개 시점에 대해 병렬적으로 수행되는 것이 아니라 iterative하게 이루어진다.  
-
-# <b>ARIMA Online Gradient Descent (ARIMA-OGD)</b>
-
-
 
 
 

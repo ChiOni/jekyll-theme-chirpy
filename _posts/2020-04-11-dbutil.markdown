@@ -166,7 +166,7 @@ for idx,y in enumerate(X_test.index):
 dbutils.notebook.exit(json.dumps(output))
 ```
 
-output은 knn모델의 예측 결과물이 맞은 경우에는 output[1]에 변수들의 리스트가 저장되고, 틀린 경우에는 output[0]에 변수들의 리스트가 저장된다. 그림 그리기에 사용할 R노트북에 데이터를 전달해줘야하기 때문에 <b>2_Modeling</b> 노트북을 나가면서는 output과 함께 exit 해준다. json.dumps는 딕셔너리 형태의 데이터를 json 형식의 스트링으로 치환해주는 함수이다. 즉, dubtils.notebook.exit은 노트북의 종료와 함께 하나의 스트링을 전달할 수 있는 기능이다.
+output은 knn모델의 예측 결과물이 맞은 경우에는 output[1]에 변수들의 리스트가 저장되고, 틀린 경우에는 output[0]에 변수들의 리스트가 저장된다. 그림 그리기에 사용할 노트북에 데이터를 전달해줘야하기 때문에 <b>2_Modeling</b> 노트북을 나가면서는 output과 함께 exit 해준다. json.dumps는 딕셔너리 형태의 데이터를 json 형식의 스트링으로 치환해주는 함수이다. 즉, dubtils.notebook.exit은 노트북의 종료와 함께 하나의 스트링을 전달할 수 있는 기능이다.
 
 <br/>
 
