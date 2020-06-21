@@ -44,7 +44,6 @@ table = sqlContext.createDataFrame(
   schema=['id','date','value'])
 ```
 
-<center>
 
 | <b>id</b> | <b>date</b> | <b>value</b> |
 | :-------: | :---------: | :----------: |
@@ -54,8 +53,6 @@ table = sqlContext.createDataFrame(
 |     B     | 2020.06.02  |     3000     |
 |     A     | 2020.06.03  |     1000     |
 |     B     | 2020.06.03  |     2000     |
-
-</center>
 
 <br/>
 
@@ -84,11 +81,13 @@ table.withColumn("bef_value",  F.lag("value").over(w)).dropna().\    # 1.
 
 <br/>
 
-나의 짧은 지식 안에서는 groupby 함수를 사용해서는 특정 컬럼을 기준으로 데이터를 정렬하는 방법이 없다. 따라서 (3) / (4)번 과정과 같이 window 함수를 사용해서 date를 기준으로 정렬된 partition을 얻고, 그 안에서 collect_list 함수를 통해 value를 묶어주는 새로운 컬럼을 생성해줘야 한다. 그런데 이런 방식에서는 iterative하게 value들이 추가되는 방식으로 컬럼이 생성되기 때문에 그룹별로 가장 큰 리스트를 뽑아주는 작업이 한 번 더 필요하다.
+나의 짧은 지식 안에서는 groupby 함수를 사용해서는 특정 컬럼을 기준으로 데이터를 정렬하는 방법이 없다. 따라서 (3) / (4)번 과정과 같이 window 함수를 사용해서 date를 기준으로 정렬된 partition을 얻고, 그 안에서 collect_list 함수를 통해 value를 묶어주는 새로운 컬럼을 생성해줘야 한다. 그런데 이런 방식에서는 iterative하게 value들이 추가되는 방식으로 컬럼이 생성되기 때문에 그룹별로 가장 큰 리스트를 뽑아주는 작업이 한 번 더 필요하다.  
+
+<center><small>iterative하게 row 별로 sorted_value 컬럼의 원소 개수가 늘어난다.</small></center>
 
 <img src="/assets/img/wt/pandasudf/pandasudftwo.jpg">  
 
-<center><small>iterative하게 row 별로 sorted_value 컬럼의 원소 개수가 늘어난다.</small></center>
+<br/>
 
 위와 같이 스파크 함수만을 사용하여 연산하는 방식이 효율적일지는 몰라도 남이 읽었을 때 조금 직관적이지 못한 것은 사실이다. 이것을 udf를 사용해서 수행해보면 아래와 같다.
 
@@ -112,9 +111,9 @@ PySpark는 기본적으로 `UDAF(User Defined Aggregation Function)`를 지원�
 
 [참조: Databricks Documentation](https://docs.databricks.com/spark/latest/spark-sql/udf-python-pandas.html)
 
-<img src="/assets/img/wt/pandasudf/pandasudfeight.jpg">
+[참조: Introducing Pandas UDF for PySpark](https://databricks.com/blog/2017/10/30/introducing-vectorized-udfs-for-pyspark.html)
 
-<center><small>[Introducing Pandas UDF for PySpark](https://databricks.com/blog/2017/10/30/introducing-vectorized-udfs-for-pyspark.html)</small></center>
+<img src="/assets/img/wt/pandasudf/pandasudfeight.jpg">
 
 위의 예시에서 사용한 UDF 방식은 스파크에서 제공하는 Column-Based한 함수들에 대비하여 극도로 느리다. JVM memory에서 python이 읽을 수 있는 형태로 spark dataframe을 변환해주고, 다시 바꿔서 가져오는 과정이 추가되기 때문이다. 데이터를 온전히 파이썬이 처리해주다보니 `Predicate pushdown, Constant folding`와 같은 Spark 최적화 기법들의 수혜를 받지 못하게된다. 기존에는 이런 한계를 극복하기 위해 Spark의 native language인 Scala를 사용해서 UDF를 작성하는 노력이 필요했다.
 
@@ -128,7 +127,11 @@ PySpark는 기본적으로 `UDAF(User Defined Aggregation Function)`를 지원�
 
 > *Apache Arrow is a cross-language development platform for in-memory data. It specifies a standardized language-independent columnar memory format for flat and hierarchical data, organized for efficient analytic operations on modern hardware. [*[Apache Arrow page](https://arrow.apache.org/)*]*
 
-사용하는 언어와 무관하게 컬럼 베이스하게 데이터를 효율적으로 처리할 수 있도록 도와주는 플랫폼이라고 한다. Apache Arrow가 in-memory columnar data format으로 언어와 시스템간의 데이터 포맷이 공유되는 것을 도와준다면, on-disk에서 이런 역할을 해주는 것은 [Apche parquet](https://parquet.apache.org/)이나 Apache ORC 등이 있다. Apache Arrow는 스파크 버젼 2.3부터 통합되었으며 Pandas 형태의 인풋과 아웃풋으로 함수를 구성하는 Pandas UDF는 Apache Arrow가 제공하는 스파크와 Pandas 간의 데이터 포맷 공유 기능을 통해 빠른 연산 속도를 보장받게 된다.  
+사용하는 언어와 무관하게 컬럼 베이스하게 데이터를 효율적으로 처리할 수 있도록 도와주는 플랫폼이라고 한다. Apache Arrow가 in-memory columnar data format으로 언어와 시스템간의 데이터 포맷이 공유되는 것을 도와준다면, on-disk에서 이런 역할을 해주는 것은 [Apche parquet](https://parquet.apache.org/)이나 Apache ORC 등이 있다.  
+
+Apache Arrow는 스파크 버젼 2.3부터 통합되었으며 Pandas 형태의 인풋과 아웃풋으로 함수를 구성하는 Pandas UDF는 Apache Arrow가 제공하는 스파크와 Pandas 간의 데이터 포맷 공유 기능을 통해 빠른 연산 속도를 보장받게 된다.
+
+<br/>
 
 본론으로 돌아와, Pandas UDF는 인풋과 아웃풋의 형태에 따라 3가지로 분류된다.
 
@@ -137,8 +140,6 @@ PySpark는 기본적으로 `UDAF(User Defined Aggregation Function)`를 지원�
 |      Scalar UDFs       |  pandas.Series   |  pandas.Series   |
 |    Grouped Map UDFs    | pandas.DataFrame | pandas.DataFrame |
 | Grouped Aggregate UDFs |  pandas.Series   |      scala       |
-
-<br/>
 
 # <b>Scalar UDFs</b>
 
@@ -174,9 +175,9 @@ def plus_one(batch_iter):  # return을 사용
 table.select(plus_one(F.col("value")).alias("plus_one")).show()
 ```
 
-<img src="/assets/img/wt/pandasudf/pandasudffive.jpg">
-
 <center><small>컬럼 값에 1씩을 더해준 값</small></center>
+
+<img src="/assets/img/wt/pandasudf/pandasudffive.jpg">
 
 `F.PandasUDFType.SCALAR_ITER`는 Input으로 컬럼 길이 만큼의 iterator of batches를 받고 같은 길이의 batches를 yield하거나 iterator of batches를 return 할 수 있다.
 
@@ -217,7 +218,11 @@ table.groupby("id").apply(diff_max).show()
 
 <img src="/assets/img/wt/pandasudf/pandasudfseven.jpg">
 
-- Grouped Map 작업의 경우 모든 테이블이 메모리에 올라간 후 함수가 적용되어 Spark의 `maxRecordsPerBatch` 기능이 적용되지 않아그룹 별 사이즈가 매우 다를 경우 memory exception을 일으킬 가능성이 크다고 한다.
+- Grouped Map 작업의 경우 모든 테이블이 메모리에 올라간 후 함수가 적용되어 
+
+  Spark의 `maxRecordsPerBatch` 기능이 적용되지 않아그룹 별 사이즈가 매우 다를 경우 
+
+  memory exception을 일으킬 가능성이 크다고 한다.
 
 # <b>Grouped aggregate UDFs</b>
 
@@ -242,9 +247,7 @@ table.groupby("id").agg(sorted_diff_value(F.col("date"),F.col("value"))).show()
 함수의 형태는 기존 udf와 크게 다르지 않지만
 
 1. 그룹 별 데이터를 하나의 row에 몰아넣어 줄 필요가 없다는 점
-2. Apache Arrow의 유연한 in memory columnar data format을 사용할 수 있다는 장점이 있다.
-
-<br/>
+2. Apache Arrow의 유연한 in memory columnar data format을 사용할 수 있다는 장점이 있다.  
 
 오늘은 유연한 PySpark 프로그래밍을 위한 UDF의 활용, 그 중에서도 직관성과 최적화 측면에서 유리한 Pandas_UDF를 정리해봤다. 추후에는 조금 큰 데이터 / 복잡한 알고리즘을 사용하여, native spark language scala를 사용하여 작성한 Udf와 판다스 Udf를 비교해 보면 좋을 것 같다.
 
