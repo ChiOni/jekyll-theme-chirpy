@@ -112,6 +112,10 @@ PySpark는 기본적으로 `UDAF(User Defined Aggregation Function)`를 지원�
 
 [참조: Databricks Documentation](https://docs.databricks.com/spark/latest/spark-sql/udf-python-pandas.html)
 
+<img src="/assets/img/wt/pandasudf/pandasudfeight.jpg">
+
+<center><small>[Introducing Pandas UDF for PySpark](https://databricks.com/blog/2017/10/30/introducing-vectorized-udfs-for-pyspark.html)</small></center>
+
 위의 예시에서 사용한 UDF 방식은 스파크에서 제공하는 Column-Based한 함수들에 대비하여 극도로 느리다. JVM memory에서 python이 읽을 수 있는 형태로 spark dataframe을 변환해주고, 다시 바꿔서 가져오는 과정이 추가되기 때문이다. 데이터를 온전히 파이썬이 처리해주다보니 `Predicate pushdown, Constant folding`와 같은 Spark 최적화 기법들의 수혜를 받지 못하게된다. 기존에는 이런 한계를 극복하기 위해 Spark의 native language인 Scala를 사용해서 UDF를 작성하는 노력이 필요했다.
 
 **Pandas UDF**는 단순히 vectorized하게 함수를 적용해줄 수 있다는 장점 이외에도 Scala UDF만큼이나 빠르다는 장점이 있다. 왜 그런가를 알아보기 위해 `Apache Arrow`가 무엇인지 읽어보고 오자.  
@@ -193,9 +197,56 @@ table.select(concat_two_cols(F.col("id"),F.col("value")).alias("concat_cols")).s
 
 - Grouped Map UDF는 **groupby( key ).apply( 사용자 정의 함수 )**의 형태로 사용된다.
 - 기존에 있던 컬럼에 함수를 맵핑 해주는 기능이기 때문에 기존 스키마의 Field name만 사용할 수 있다.
-- 아웃풋은 DataFrame의 형태로
+- 아웃풋은 DataFrame의 형태로. 키와 리턴해주는 모든 컬럼의 타입을 명시해줘야 한다.
 
 ```python
+# 그룹별로 각 컬럼의 최대값과의 차이를 assign 해주는 함수
 
+@F.pandas_udf("id string,date int,value int", F.PandasUDFType.GROUPED_MAP)
+def diff_max(pdf):
+  d = pdf.date
+  v = pdf.value
+    
+  return pdf.assign(
+    date  = (pd.to_datetime(d.max()) - pd.to_datetime(d)).dt.days,
+    value = v.max()-v
+  )
+  
+table.groupby("id").apply(diff_max).show()
 ```
+
+<img src="/assets/img/wt/pandasudf/pandasudfseven.jpg">
+
+- Grouped Map 작업의 경우 모든 테이블이 메모리에 올라간 후 함수가 적용되어 Spark의 `maxRecordsPerBatch` 기능이 적용되지 않아그룹 별 사이즈가 매우 다를 경우 memory exception을 일으킬 가능성이 크다고 한다.
+
+# <b>Grouped aggregate UDFs</b>
+
+가장 자주 사용하게 되는 함수. 여러 컬럼을 동시에 집어넣은 후, 스파크 기본 문법으로는 참 귀찮고 어려운 알고리즘을 수행한 후 실수 형태의 서머리를 얻는 작업에 많이 사용된다.
+
+- GROUPED_MAP과는 다르게 컬럼명 없이 return하는 결과물의 타입만 명시해주면 된다.
+- 한 개 이상의 Series를 인풋으로 넣은 후 하나의 Scala 값을 얻는 작업에 수행된다.
+
+> 각 id별로 시간의 흐름에 따른 value의 차분 값을 얻고 싶다.
+>
+> 따라서 key는 id가 되며 date와 value 두 Series가 인풋으로 필요하다.
+
+```python
+@F.pandas_udf(ArrayType(IntegerType()), F.PandasUDFType.GROUPED_AGG)
+def sorted_diff_value(date,value):
+  l = [x[1] for x in sorted(zip(date,value))]
+  return [aft-bef for bef,aft in zip(l,l[1:])]
+  
+table.groupby("id").agg(sorted_diff_value(F.col("date"),F.col("value"))).show()
+```
+
+함수의 형태는 기존 udf와 크게 다르지 않지만
+
+1. 그룹 별 데이터를 하나의 row에 몰아넣어 줄 필요가 없다는 점
+2. Apache Arrow의 유연한 in memory columnar data format을 사용할 수 있다는 장점이 있다.
+
+<br/>
+
+오늘은 유연한 PySpark 프로그래밍을 위한 UDF의 활용, 그 중에서도 직관성과 최적화 측면에서 유리한 Pandas_UDF를 정리해봤다. 추후에는 조금 큰 데이터 / 복잡한 알고리즘을 사용하여, native spark language scala를 사용하여 작성한 Udf와 판다스 Udf를 비교해 보면 좋을 것 같다.
+
+<br/>
 
