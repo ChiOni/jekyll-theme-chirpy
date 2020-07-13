@@ -55,7 +55,7 @@ seo:
 
 - <b>Eigenvalue, Eigenvectors</b>
 
-  - <img src="/assets/img/chat/s096/s0962.jpg">  
+  <img src="/assets/img/chat/s096/s0962.jpg">  
 
   - Happens iff `det(A - lambda*I) = 0`
 
@@ -63,21 +63,26 @@ seo:
 
   - Eigenvalue의 기하학적 이해
 
-    -  어떤 벡터 v에 Matrix A의 operation이 가해진 것이, v를 람다만큼 스케일 업 한 것과 같다.
+    - 어떤 벡터 v에 Matrix A의 operation이 가해진 것이, v를 람다만큼 스케일 업 한 것과 같다.
 
-  - Matrix A가 orthonormally diagonalizable한 것의 의미
+      <br/>
 
-    - `A = UDU_t (U_t: U transpose)`
-
-    - `U: orthonormal Matrix, D: diagonal Matrix`
-
-    - 그러면 U는 A의 Operation이 표현하는 방향이 되고, D는 각 방향의 크기를 나타낸다.
-
+  
+- Matrix A가 orthonormally diagonalizable한 것의 의미
+  
+  - `A = UDU_t (U_t: U transpose)`
+  
+  - `U: orthonormal Matrix, D: diagonal Matrix`
+  
+  - 그러면 U는 A의 Operation이 표현하는 방향이 되고, D는 각 방향의 크기를 나타낸다.
+  
       <b>(Thm 1) All symetric matrices are orthonormally diagonalizable</b>
-
+  
       <b>(Thm 2) Real Symmetric Matrix have real eigenvalues</b>
-
-
+      
+      <img src="/assets/img/chat/s096/s0962.jpg">  
+      
+      <center><small>( Proof Thm2 ) 대충 람다의 complex conjugate가 람다와 동일하니 람다가 실수라는 뜻</small></center>
 
 <br/>
 
