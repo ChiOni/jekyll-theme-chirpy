@@ -13,11 +13,11 @@ seo:
 
 <br/>
 
-<b>MIT 18.S096 Topics in Mathematics with Applications in Finance, Fall 2013 [Youtube 링크](https://www.youtube.com/watch?v=wvXDB9dMdEo&t=17s)</b>
+> <b>MIT 18.S096 Topics in Mathematics with Applications in Finance, Fall 2013 [Youtube 링크](https://www.youtube.com/watch?v=wvXDB9dMdEo&t=17s)</b>
 
-1강부터 차근차근 이해하고 요약하고 리뷰하는 것을 목적으로 포스팅을 시작하며 우선 시작은 역시 Intro!
+<img src="/assets/img/chat/s096/s0961.jpg">  
 
-
+<br/>
 
 # <b>Lecture 1. Introduction, Financial Terms and Concepts</b>
 
