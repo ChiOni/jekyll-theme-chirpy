@@ -1,0 +1,23 @@
+---
+title: Lecture 1. Introduction (18.S096)
+date: 2020-07-13 00:00:00 +0800
+categories: [Chat, MIT 18.S096]
+tags: [mathematics,finance]
+seo:
+  date_modified: 2020-07-13 20:07:02 +0800
+---
+
+<br/>
+
+전공 과목 중 금융 수학이라는 과목이 있었는데 구체적으로 무엇을 배웠고, 어디에 쓸 수 있는 수학이었는지가 당최 기억이 나지 않는다. 다만 한창 비트코인 열풍의 시기라 수업의 주제가 매우 흥미로웠고 알아두면 쓸모 있을 것 같은 느낌만이 느낌적으로 남아있다. 시간을 되돌려 수업을 진중하게 들어볼 수 있다면 좋겠지만 그럴 수 없으니  `MIT OpenCourseWare`에서 비슷해 보이는 강의를 찾아보았다.
+
+<br/>
+
+<b>MIT 18.S096 Topics in Mathematics with Applications in Finance, Fall 2013 [Youtube 링크](https://www.youtube.com/watch?v=wvXDB9dMdEo&t=17s)</b>
+
+1강부터 차근차근 이해하고 요약하고 리뷰하는 것을 목적으로 포스팅을 시작하며 우선 시작은 역시 Intro!
+
+
+
+# <b>Lecture 1. Introduction, Financial Terms and Concepts</b>
+
