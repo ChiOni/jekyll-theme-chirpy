@@ -116,23 +116,22 @@ t_te가 바로 `change point`가 된다.
 
 
 
-<img src="/assets/img/pe/changepoint/likelihood/likelihoodthree.jpg">  
+<img src="/assets/img/pe/changepoint/likelihood/likelihoodthree.JPG">  
 
 <center><small>논문에서 풀고자하는 Optimization Problem</small></center>
-
 <br/>
 
 위의 식이 어떻게 도출되는지는 해당 논문보다 Kullback-Leibler Importance Estimation Procedure (KLIEP)가 처음 고안된 [링크](https://www.ism.ac.jp/editsec/aism/pdf/060_4_0699.pdf)에서 자세히 설명해주고 있다. 요약하자면,
 
 - Train Interval의 값을 어떤 모델 w로 태워서 Test Interval의 밀도 te`을 추정할 것인데,
 
-  실제 밀도 te의 기댓값을 사용하여 KL(te|te`) divergence을 최소화하도록 모델 w을 학습할 것이다.
+  실제 밀도 te의 기댓값을 사용하여 KL(te/te`) divergence을 최소화하도록 모델 w을 학습할 것이다.
 
-  <img src="/assets/img/pe/changepoint/likelihood/likelihoodfour.jpg"> 
+  <img src="/assets/img/pe/changepoint/likelihood/likelihoodfour.JPG"> 
 
-  그런데 보다싶이 첫 번째 텀은 학습할 수 있는 파라미터와 독립적이기 때문에 뒤에 것만 극대화해주면 된다. 
-
-
+  첫 번째 텀은 학습할 수 있는 파라미터와 독립적이기 때문에 뒤에 것만 극대화해주면 된다. 
 
 
+
+(작성중 ... )
 
