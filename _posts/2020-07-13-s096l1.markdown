@@ -118,7 +118,7 @@ Theorem3은 U와 V가 각각 (A * A_t) /  (A_t * A) 의 eigenvoctor를 컬럼으
 
 > <b>(Thm 4 Perron–Frobenius theorem)</b>
 >
-> A: n x n symmetric matrix with positive entries, Then
+> A: n x n symmetric matrix with positive entries, Then  
 >
 > 1. Some real Eigenvalue λ0 such that abs(λ) < λ0 for all other λ exist
 > 2. Some eigenvector with all positive entries corresponding to λ0
