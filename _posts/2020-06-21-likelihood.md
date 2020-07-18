@@ -9,7 +9,11 @@ seo:
 
 > In statistical analysis, **change detection** or **change point detection** tries to identify times when the probability distribution of a stochastic process or time series changes. In general the problem concerns both detecting whether or not a change has occurred, or whether several changes might have occurred, and identifying the times of any such changes.
 
-[<배경> A Survey of Methods for Time Series Change Point Detection(2017)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5464762/#:~:text=Change%20point%20detection%20(CPD)%20is,well%20as%20change%20point%20detection.)
+
+
+### <b>배경</b>
+
+[A Survey of Methods for Time Series Change Point Detection 2017](https://www.researchgate.net/publication/307947624_A_Survey_of_Methods_for_Time_Series_Change_Point_Detection)
 
 - Unsupervised Change Point Detection
   - **Likelihood Ratio Methods**
