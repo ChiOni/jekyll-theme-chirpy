@@ -168,10 +168,9 @@ key / query / value를 통해서 self-attention을 수행하는 방법이다.
 
 #### <b>자료</b>
 
-- 논문
-  - https://arxiv.org/pdf/1706.03762.pdf
-- 코드
-  - https://github.com/tensorflow/tensor2tensor#language-modeling
-
+- [논문](https://arxiv.org/pdf/1706.03762.pdf)
+- [코드](https://github.com/tensorflow/tensor2tensor#language-modeling)
+  
 - 이미지
   - [illustrated-transformer](http://jalammar.github.io/illustrated-transformer/) 
+
