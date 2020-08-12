@@ -26,7 +26,6 @@ PyToch 1.2 version 부터 Attention is All You Need 논문에 기반한 모듈�
 <img src="/assets/img/pe/transformer/transformer2.jpg">  
 
 <center><small>Pytorch에서 제공하는 Transformer 관련 Class들</small></center>
-
 <br/>
 
 논문에서는 Transformer 모델을  `machine translation tasks `를 해결하는데 사용하였지만, Tutorial에서는 그보다는 비교적 간단한 `language modeling tasks`에 적용한다. Language Modeling Task는 문장의 다음 단어가 무엇일지 예측하는 과제이다.  
@@ -45,7 +44,6 @@ from torch.nn import TransformerEncoder, TransformerEncoderLayer
 ```
 
 <center>많은 라이브러리들이 필요하지는 않다.</center>
-
 <br/>
 
 ```python
@@ -93,6 +91,17 @@ class PositionalEncoding(nn.Module):
 
 <br/>
 
-예제에서 적용되어 있는 Positional Encoding 클래스를 조금 더 단순하게 구현해봤다.
-
 <img src="/assets/img/pe/transformer/transformer3.jpg">  
+
+<center><small>예제에 적용되어 있는 Positional Encoding 클래스의 div_term을 조금 더 단순하게 (논문과 동일하게) 구현하여 사용했다.</small></center>
+
+>  Positional Encoding은 embeded된 input에 **고정된** 값을  더해주는 모듈이다.  
+
+[transformer_architecture_positional_encoding](https://kazemnejad.com/blog/transformer_architecture_positional_encoding/)라는 kzaemnejad 씨의 블로그 포스트에 다양한 기법들이 소개되어 있는데, Transforemer에 사용된 sin / cos 기반의 positional encoding의 장점은 (1) input dimension과 동일한 크기의 벡터로 생성 가능하고 (2) 모델이나 Input의 형태와 무관하게 고정된 값을 갖는데 있다. 또한 **div_term**을 통해서 input dimension이 매우 길었을 때, positional encoding이 모델에 너무 크게 관여하는 것을 방지한다.  
+
+<br/>
+
+<b># 2. TransformerEncoderLayer(ninp, nhead, nhid, dropout)</b>
+
+
+
