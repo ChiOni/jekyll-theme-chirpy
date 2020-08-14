@@ -87,25 +87,25 @@ Transformer와 기존 RNN Based 모델의 차이점은 단순히 구조의 단�
 
 <br/>
 
-- **Self-Attention Layer**
-  - Input의 어떤 단어에 더 초점을 맞추어 Encdoing을 진행할 지 결정하게 되는 Layer
-  - Multi-head로 본다는 것은 Convolution을 multi-channel로 하는 것과 같은 개념이다.
-
-  
-
-- **Feed-Forward Layer**
+- **Positional Encoding**
   - input sequence의 단어 순서를 고려하기 위해서 추가된 Layer
   - non-trainable vector로서 position마다 정해진 형태의 값을 더한다
   - [What is the positional encoding in the transformer model?](https://datascience.stackexchange.com/questions/51065/what-is-the-positional-encoding-in-the-transformer-model) 
 
+- **Self-Attention Layer**
+  - Input의 어떤 단어에 더 초점을 맞추어 Encdoing을 진행할 지 결정하게 되는 Layer
+  - Multi-head로 본다는 것은 Convolution을 multi-channel로 하는 것과 같은 개념이다.
+
+
+- **Pointwise Feed Forward Layer**
+
+  - Transformer에서는 residual connection을 적용한 두 층의 linear layer 사용
+
+  - > We employ a **residual connection** around each of the two sub-layers, followed by layer normalization. That is, the output of each sub-layer is LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself. To facilitate these residual connections, all sub-layers in the model, as well as the embedding layers, produce outputs of dimension dmodel = 512.
+
 <br/>
 
-> We employ a **residual connection** around each of the two sub-layers, followed by layer normalization. That is, the output of each sub-layer is LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself. To facilitate these residual connections, all sub-layers in the model, as well as the embedding layers, produce outputs of dimension dmodel = 512.
-
 <img src="/assets/img/pr/transformer/transformer3.jpg"> 
-
-- **Redisual connection**
-  - 각 layer 사이에는 이전 값을 다시 가져와 더해주는 residual connenction 기법이 사용됬다.
 
 <br/>
 
@@ -133,7 +133,7 @@ Transformer와 기존 RNN Based 모델의 차이점은 단순히 구조의 단�
 <br/>
 
 - **Masking**
-  - Encoding의 경우, 모든 input을 동시에 집어넣어서 병렬적으로 수행되자만, Decoding을 그런 방법으로 수행했을 때에는 아직 문장에서 등장하지 않은 미래의 단어를 참고하게 된다. 따라서 Self-Attention을 수행할 때, 이미 번역을 수행한 Output들에 대해서만 Score를 계산한다.  
+  - Encoding의 경우, 모든 input을 동시에 집어넣어서 병렬적으로 수행되지만, Decoding을 그런 방법으로 수행했을 때에는 아직 문장에서 등장하지 않은 미래의 단어를 참고하게 된다. 따라서 Self-Attention을 수행할 때, 이미 번역을 수행한 Output들에 대해서만 Score를 계산한다.  
 
 <br/>
 
