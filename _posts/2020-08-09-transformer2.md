@@ -89,19 +89,17 @@ class TransformerModel(nn.Module):
 
 <br/>
 
-Tutorial에서 Transformer의 구조가 논문과 다른 부분들이 조금 있는데, Task가 다르기 때문에 발생한 차이이다. 우선 Output이 `가장 등장 확률이 높은 단어 하나` 이기 때문에 Decoder의 형태를 띄지 않고 Linear Layer 한 층으로 간소화됬다.  
-
-또한 언어 모델링 과제를 위해서는 Self - Attention 과정에서 이전 포지션의 단어들만 참조하도록 뒤의 단어들에 대한 `attention mask`가 필요하다. 
+Tutorial에서 Transformer의 구조가 논문과 다른 부분들이 조금 있는데, Task가 다르기 때문에 발생한 차이이다. 우선 Output이 `가장 등장 확률이 높은 단어 하나` 이기 때문에 Decoder의 형태를 띄지 않고 Linear Layer 한 층으로 간소화됬다. 또한 언어 모델링 과제를 위해서는 Self - Attention 과정에서 이전 포지션의 단어들만 참조하도록 뒤의 단어들에 대한 `attention mask`가 필요하다. 
 
 
 
-Class `TransformerModel`에는 여러 **Object Method**들이 존재하지만 한 눈에 보기에는 너무 많으니 객체 속성들과 함수들을 위에서부터 차근차근 봐보자.
+여러 **Object Method**들이 존재하지만 한 눈에 보기에는 너무 많으니 객체 속성들과 함수들을 위에서부터 봐보자.
 
-- <b>TransforemrModel modules</b>
+- <b>TransformerModel modules</b>
   - [PositionalEncoding(ninp, dropout)](#PositionalEncoding)
   - [TransformerEncoderLayer(ninp, nhead, nhid, dropout)](#TransformerEncoderLayer)
   - [_generate_square_subsequent_mask(self, sz)](#generate_square_subsequent_mask)
-  - [init_weights](#init_weights)
+  - [nn.Embedding(ntoken, ninp)](#nn.Embedding)
 
 <br/>
 
@@ -129,15 +127,30 @@ class PositionalEncoding(nn.Module):
 
 <br/>
 
-<img src="/assets/img/pe/transformer/transformer3.jpg">  
+Positional Encoding은 embeded된 input에 **고정된** 값을  더해주는 모듈이다.  
+
+- max_len은 들어올 수 있는 input sequnce의 최대 길이이다.
+- d_model은 input의 feature dimension이다.
+
+<br>
+
+```python
+max_len = 10
+d_model = 6
+
+pe = torch.zeros(max_len, d_model)
+position = torch.arange(0, max_len, dtype = torch.float).unsqueeze(1)
+div_term = torch.pow(10000, torch.arange(0,d_model,2).float()/d_model)
+
+pe[:, 0::2] = torch.sin(position / div_term)
+pe[:, 1::2] = torch.cos(position / div_term)
+
+print(div_term)
+print(pe)
+```
 
 <center><small>예제에 적용되어 있는 Positional Encoding 클래스의 div_term을 조금 더 단순하게 (논문과 동일하게) 구현하여 사용했다.</small></center>
-<br/>
-
->  Positional Encoding은 embeded된 input에 **고정된** 값을  더해주는 모듈이다.  
->
->  - max_len은 들어올 수 있는 input sequnce의 최대 길이이다.
->  - d_model은 input의 feature dimension이다.
+<img src="/assets/img/pe/transformer/transformer3.jpg">  
 
 <br/>
 
@@ -192,6 +205,7 @@ class TransformerEncoderLayer(Module):
 **MultiheadAttention**
 
 - positional encoding이 완료된 embeded input을 받아서 self-attention을 수행한다.
+- 해당 부분은 아주 중요하니 뒤에서 따로 다루겠다.
 
 <br/>
 
@@ -224,10 +238,135 @@ _generate_square_subsequent_mask(len(src))
 ```
 
 <center><small>정사각형의 attention mask 생성</small></center>
-
 <img src="/assets/img/pe/transformer/transformer5.jpg">
+
+- mask 값에 -inf를 취하는 이유는 softmax 이후의 결과값을 0으로 얻기 위함이다.
+
+- TransformerEncoder에는 위의 attention mask 이외에도 `key padding mask` 라는 모듈도 있다.
+
+  - 역할은 `모든 문장의 k번째 단어를 masking하고 싶을 때` 활용할 수 있는 Masking 기법이다.
+
+  - 따라서 attention mask가 인풋 sequence의 길이 S에 대하여 (S,S)의 Matrix를 생성하는데 반해,
+
+    key_padding_mask는 batch size N에 대하여 (N,S)의 Matrix를 생성한다. 
 
 <br/>
 
-## <b>init_weights</b>
+## <b>nn.Embedding()</b>
+
+모델링의 흐름을 생각해보면, 우선 모든 문장에 존재하는 단어들에 대한 단어장을 만드는 작업이 선행된다. 그 이후, 각 문장을 단어장의 index에 대입하여 numericalize하는 작업을 수행한다. 결국 모델의 인풋으로 들어가는 것은 각 문장이 어떤 숫자들의 list 형태이다.  
+
+```python
+encoder = nn.Embedding(10, 5)
+
+# token set의 크기를 10으로 한정 지었기 때문에 k의 자리에 10 이상의 숫자는 들어올 수 없다.
+# (EX) encoder(torch.tensor([10]))  -->> 에러 발생
+
+# 하나의 단어(숫자)는 dim (1,5)의 텐서로 출력된다.
+# 한 번에 여러개의 단어를 집어 넣는 것도 가능하다.
+
+print(encoder(torch.tensor([1,2,3])))
+```
+
+<img src="/assets/img/pe/transformer/transformer6.jpg">
+
+<br/>
+
+## <b>MultiheadAttention(d_model, nhead, dropout=dropout)</b>
+
+```python
+class MultiheadAttention(Module):
+
+    def __init__(self, embed_dim, num_heads, dropout=0., bias=True, add_bias_kv=False, add_zero_attn=False, kdim=None, vdim=None):
+        super(MultiheadAttention, self).__init__()
+        self.embed_dim = embed_dim
+
+        self.num_heads = num_heads
+        self.dropout = dropout
+        self.head_dim = embed_dim // num_heads
+        
+        self.in_proj_weight = Parameter(torch.empty(3 * embed_dim, embed_dim))
+        	
+        self.register_parameter('q_proj_weight', None)
+        self.register_parameter('k_proj_weight', None)
+        self.register_parameter('v_proj_weight', None)
+        self.register_parameter('in_proj_bias', None)
+            
+        self.out_proj = _LinearWithBias(embed_dim, embed_dim)
+        self.bias_k = self.bias_v = None
+
+        self.add_zero_attn = add_zero_attn
+        self._reset_parameters()
+
+    def _reset_parameters(self):
+        xavier_uniform_(self.in_proj_weight)
+
+	def forward(self, query, key, value, key_padding_mask=None,
+                need_weights=True, attn_mask=None):
+
+        return F.multi_head_attention_forward(
+                query, key, value, self.embed_dim, self.num_heads,
+                self.in_proj_weight, self.in_proj_bias,
+                self.bias_k, self.bias_v, self.add_zero_attn,
+                self.dropout, self.out_proj.weight, self.out_proj.bias,
+                training=self.training,
+                key_padding_mask=key_padding_mask, need_weights=need_weights,
+                attn_mask=attn_mask)
+```
+
+MultiheadAttention을 조금 간단하게 보기 위해서 실제 Pytorch Implementation에서 더욱 간소화했다.
+
+- K / Q / V의 dimension이 모두 같다 가정한다.
+- Attention Score 계산 과정에 bias의 작용은 제거한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## <b>참고 자료</b>
+
+- **코드 소스**
+  - [Class Transformer](https://pytorch.org/tutorials/beginner/transformer_tutorial.html)
+  - [MultiheadAttention](https://pytorch.org/docs/master/_modules/torch/nn/modules/activation.html#MultiheadAttention)
+  - [TransformerEncoder](https://pytorch.org/docs/master/_modules/torch/nn/modules/transformer.html#TransformerEncoder)
+  - [TransforemrEncoderLayer](https://pytorch.org/docs/master/_modules/torch/nn/modules/transformer.html#TransformerEncoderLayer)
+
+
+
+- **설명**
+  - [TransformerEncoderLayer의 Masking 기법들에 대한 설명](https://discuss.pytorch.org/t/how-to-add-padding-mask-to-nn-transformerencoder-module/63390/3)
 
