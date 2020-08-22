@@ -354,7 +354,11 @@ def multi_head_attention_forward(query,                           # type: Tensor
                                  static_k=None,                   # type: Optional[Tensor]
                                  static_v=None                    # type: Optional[Tensor]
                                  ):
-  
+    
+  	# tgt_len = Input에 몇 개의 문장이 들어왔는지
+    # bsz = 각 문장에 단어가 몇 개인지
+    # embed_dim = 각 단어가 크기 몇으로 벡터화됬는지
+    
     tgt_len, bsz, embed_dim = query.size()
     
     # 멀티 헤드 어텐션을 사용하기 때문에 embed_dim은 head_dim * head 수
@@ -372,6 +376,9 @@ def multi_head_attention_forward(query,                           # type: Tensor
     q = q * scaling
     
     # tensor는 is_contiguous() 한 상태에서만 view나 transpose를 적용할 수 있다.
+    # multihead attention이 뭔가 initialize를 여러 번하면서 loop를 도는 구조로 생각했었는데
+    # initialize는 한 번만 하고 embed_dim을 여러개로 쪼개서 작업되는 것이었다.
+    
     q = q.contiguous().view(tgt_len, bsz * num_heads, head_dim).transpose(0, 1)
     k = k.contiguous().view(-1, bsz * num_heads, head_dim).transpose(0, 1)
     v = v.contiguous().view(-1, bsz * num_heads, head_dim).transpose(0, 1)
