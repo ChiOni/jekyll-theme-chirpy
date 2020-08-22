@@ -30,7 +30,7 @@ PyToch 1.2 version 부터 Attention is All You Need 논문에 기반한 모듈�
 
 논문에서는 Transformer 모델을  `machine translation tasks `를 해결하는데 사용하였지만, Tutorial에서는 그보다는 비교적 간단한 `language modeling tasks`에 적용한다. Language Modeling Task는 문장의 다음 단어가 무엇일지 예측하는 과제이다.  
 
-Language Model의 Output을 얻는 과정은 Input과 유사한 차원 크기로 Decoding하는 것이 아니라 단순히 Linear Layer를 태우는 것이다. 따라서 논문에서 사용됬던 `Encoder-Decoder Attention` / `Masked Self Attention`과 같은 여러 기교들을 사용할 필요 없이 간단하게 모델을 구현하는 것이 가능하다. 물론 그렇다고 이것의 구현이 쉽지만은 않다. 침착하고 정교한 복붙을 통해 한 줄 한 줄 이해해보려 한다.  
+Language Model의 Output을 얻는 과정은 Input과 유사한 차원 크기로 Decoding하는 것이 아니라 단순히 Linear Layer를 태우는 것이다. 따라서 논문에서 사용됬던 `Encoder-Decoder Attention` 과 같은 기교들을 사용할 필요 없이 간단하게 모델을 구현하는 것이 가능하다. 물론 그렇다고 이것의 구현이 쉽지만은 않다. 침착하고 정교한 복붙을 통해 한 줄 한 줄 이해해보려 한다.  
 
 <br/>
 
@@ -604,6 +604,18 @@ print('=' * 89)
 ```
 
 평가한다.
+
+<br/>
+
+## <b>Data Dimension</b>
+
+각 과정에서의 Data Dimension을 죄송하지만 귀찮으니 전부 사진으로 첨부한다.
+
+<img src="/assets/img/pe/transformer/transformer7.jpg">
+
+<img src="/assets/img/pe/transformer/transformer8.jpg">
+
+<img src="/assets/img/pe/transformer/transformer9.jpg">
 
 <br/>
 
