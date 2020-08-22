@@ -324,7 +324,7 @@ MultiheadAttention을 조금 간단하게 보기 위해서 실제 Pytorch Implem
 사실 위의 클래스만 봐서는 pytorch 안에서 어떻게 self -attention이 작동되는지 확인할 수 없다. 클래스에 정의된 여러 parameter를 갖고 forward의  `F.multi_head_attention_forward` 함수가 어떻게 작용하는지 확인해보자. 그러나 사실 컨셉적인 부분들을 이해했다면 Layer를 구성하는 최소 단위의 함수를 굳이 뜯어볼 필요는 없다고 생각한다. 조금 TMI라고 생각하기 때문에 궁금한 사람만 펼쳐보도록 하자.
 
 <details>
-<summary><strong>F.multi_head_attention_forward 함수 자세히 보기</strong></summary>
+<summary><strong>F.multi_head_attention_forward 함수 자세히 보려면 펼치기</strong></summary>
 <div markdown="1">
 
 [(출처)github / torch / funcional.py](https://github.com/pytorch/pytorch/blob/master/torch/nn/functional.py)
@@ -403,21 +403,213 @@ def multi_head_attention_forward(query,                           # type: Tensor
 </div>
 </details>
 
+<br/>
 
+사실상 Transformer를 구성하는 모든 모듈을 하나씩 봤다고 볼 수 있다. 큰 그림으로 되돌아보면.
 
+<br/>
 
+1. n개의 단어로 이루어진 문장을 Input으로 받아 각 단어를 k차원의 벡터로 임베딩하였다. 
 
+2. 단어들의 위치에 따라 고유의 성질을 기억할 수 있도록 Positional Encoding하였다.
 
+3. 임베딩한 (n,k) 차원의 데이터를 여러겹의 Transformer Layer에 통과시켰다.
 
+   > Transformer Layer ==
+   >
+   > 1. Multihead Self Attention Layer
+   > 2. Drop Out / Residual Connection /  Layer Normalization
+   > 3. Feed-Forward Layer
+   > 4. Drop Out /  Residual Connection/ Layer Normalization
 
+4. 마지막으로 튀어나온 벡터를 전체 단어 개수 N에 Linear Layer로 디코딩하여 아웃풋을 얻는다.
 
+<br/>
 
+# <b>Practice</b>
 
-(작성 중)
+그러면 Tutorial에 있는 예제를 한 번 돌려보자.
 
+```python
+import torchtext
+from torchtext.data.utils import get_tokenizer
 
+TEXT = torchtext.data.Field(tokenize=get_tokenizer("basic_english"),
+                            init_token='<sos>',
+                            eos_token='<eos>',
+                            lower=True)
+```
 
+[get_tokenizer](https://pytorch.org/text/data.html#get-tokenizer) 함수는 Source Text를 어떤 방식으로 numericalize 할지 정의한다.
 
+<br/>
+
+```python
+train_txt, val_txt, test_txt = torchtext.datasets.WikiText2.splits(TEXT)
+TEXT.build_vocab(train_txt)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+```
+
+torchtext.datasets의 데이터를 split 혹은 iters 함수를 통해 train과 test 셋으로 분리할 수 있다. 
+
+**WikeText2** Dataset은 위키피디아에서 Good 혹은 Featured 등급(?)을 받은 여러 Article의 집합체라고 볼 수 있으며 이것의 확장 버전으로  WikiText-103이라는 이름의 데이터도 존재한다.
+
+<br>
+
+```python
+def batchify(data, bsz):
+    data = TEXT.numericalize([data.examples[0].text])
+    # Divide the dataset into bsz parts.
+    nbatch = data.size(0) // bsz
+    # Trim off any extra elements that wouldn't cleanly fit (remainders).
+    data = data.narrow(0, 0, nbatch * bsz)
+    # Evenly divide the data across the bsz batches.
+    data = data.view(bsz, -1).t().contiguous()
+    return data.to(device)
+
+batch_size = 20
+eval_batch_size = 10
+train_data = batchify(train_txt, batch_size)
+val_data = batchify(val_txt, eval_batch_size)
+test_data = batchify(test_txt, eval_batch_size)
+```
+
+batchify 함수의 input으로 들어가는 `data.examples[0].text` 단어 단위로 쪼개져있는 문장들의 집합이다.  
+
+**train_txt.exaples[0].text** 의 경우 2,086,708 개의 단어들이 들어가있는 리스트인데 중복은 가능하다.  
+
+Numericalize하게 되면 아까 TEXT.build_vocab  함수로 만들어둔 사전에 의해서 단어 &rarr; 양의 정수로 변환된다.  
+
+이것을 batch_size = 20으로 나누어 각 문장이 최대 단어 20개로 이루어지도록 데이터셋을 가공한다.   
+
+train_data는 원래 train_txt의 크기인  2086708을 20으로 나눈 몫이 되어 104,335 길이의 데이터가 된다.  
+
+<br/>
+
+```python
+bptt = 35 # 각 배치의 크기
+def get_batch(source, i):
+    seq_len = min(bptt, len(source) - 1 - i) # 마지막에 배치 크기로 나누어 떨어지지 않을 수 있으니깐
+    data = source[i:i+seq_len]
+    target = source[i+1:i+1+seq_len].view(-1)
+    return data, target
+```
+
+여기서 수행하는 Language Modeling은 이후의 단어들을 예측하는 과제이기 때문에 get_batch 함수를 통해 얻어지는 **target**은 **data**가 하나씩 shift된 데이터라고 보면된다.  
+
+<br/>
+
+```python
+ntokens = len(TEXT.vocab.stoi)  # the size of vocabulary
+emsize = 200                    # embedding dimension
+nhid = 200                      # the dimension of the feedforward network model in nn.TransformerEncoder
+nlayers = 2                     # the number of nn.TransformerEncoderLayer in nn.TransformerEncoder
+nhead = 2                       # the number of heads in the multiheadattention models
+dropout = 0.2                   # the dropout value
+model = TransformerModel(ntokens, emsize, nhead, nhid, nlayers, dropout).to(device)
+```
+
+모델의 형태를 정의하는 여러 Parameter. nhid = emsize로 설정했기 때문에 Feed Forward Layer는 input - hidden - ouput 사이즈가 모두 동일한 오토인코더의 형태로 설정됬다.  
+
+<br/>
+
+```python
+criterion = nn.CrossEntropyLoss()
+lr = 5.0 # learning rate
+optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
+```
+
+학습되는 방법들을 정의하는 여러 Parameter.
+
+<br/>
+
+<details>
+<summary><strong>Train / Eval은 뻔하니깐 펼쳐서 보자</strong></summary>
+<div markdown="1">
+
+```python
+def train():
+    model.train() # Turn on the train mode
+    total_loss = 0.
+    ntokens = len(TEXT.vocab.stoi)
+    for batch, i in enumerate(range(0, train_data.size(0) - 1, bptt)):
+        data, targets = get_batch(train_data, i)
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output.view(-1, ntokens), targets)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5) # parameter exploding 방지
+        optimizer.step()
+
+        total_loss += loss.item()
+        log_interval = 200
+        if batch % log_interval == 0 and batch > 0:
+            cur_loss = total_loss / log_interval
+            print('| epoch {:3d} | {:5d}/{:5d} batches | '
+                  'lr {:02.2f} | '
+                  'loss {:5.2f} | ppl {:8.2f}'.format(
+                    epoch, batch, len(train_data) // bptt, scheduler.get_lr()[0],
+                    cur_loss, math.exp(cur_loss)))
+            total_loss = 0
+
+def evaluate(eval_model, data_source):
+    eval_model.eval() # Turn on the evaluation mode
+    total_loss = 0.
+    ntokens = len(TEXT.vocab.stoi)
+    with torch.no_grad():
+        for i in range(0, data_source.size(0) - 1, bptt):
+            data, targets = get_batch(data_source, i)
+            output = eval_model(data)
+            output_flat = output.view(-1, ntokens)
+            total_loss += len(data) * criterion(output_flat, targets).item()
+    return total_loss / (len(data_source) - 1)
+```
+
+</div>
+</details>
+
+<br/>
+
+```python
+best_val_loss = float("inf")
+epochs = 3 # The number of epochs
+best_model = None
+
+for epoch in range(1, epochs + 1):
+    train()
+    val_loss = evaluate(model, val_data)
+    print('-' * 89)
+    print('| end of epoch {:3d} | valid loss {:5.2f} | '
+          'valid ppl {:8.2f}'.format(epoch,val_loss, math.exp(val_loss)))
+    print('-' * 89)
+
+    if val_loss < best_val_loss:
+        best_val_loss = val_loss
+        best_model = model
+
+    scheduler.step()
+```
+
+학습한다.
+
+<br/>
+
+```python
+test_loss = evaluate(best_model, test_data)
+print('=' * 89)
+print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
+    test_loss, math.exp(test_loss)))
+print('=' * 89)
+```
+
+평가한다.
+
+<br/>
+
+**끝**
+
+<br/>
 
 ## **참고 자료**
 
@@ -428,43 +620,3 @@ def multi_head_attention_forward(query,                           # type: Tensor
   - [TransforemrEncoderLayer](https://pytorch.org/docs/master/_modules/torch/nn/modules/transformer.html#TransformerEncoderLayer)
 - 설명
   - [TransformerEncoderLayer의 Masking 기법들에 대한 설명](https://discuss.pytorch.org/t/how-to-add-padding-mask-to-nn-transformerencoder-module/63390/3)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## <b>참고 자료</b>
-
-- **코드 소스**
-  - [Class Transformer](https://pytorch.org/tutorials/beginner/transformer_tutorial.html)
-  - [MultiheadAttention](https://pytorch.org/docs/master/_modules/torch/nn/modules/activation.html#MultiheadAttention)
-  - [TransformerEncoder](https://pytorch.org/docs/master/_modules/torch/nn/modules/transformer.html#TransformerEncoder)
-  - [TransforemrEncoderLayer](https://pytorch.org/docs/master/_modules/torch/nn/modules/transformer.html#TransformerEncoderLayer)
-
-
-
-- **설명**
-  - [TransformerEncoderLayer의 Masking 기법들에 대한 설명](https://discuss.pytorch.org/t/how-to-add-padding-mask-to-nn-transformerencoder-module/63390/3)
-
