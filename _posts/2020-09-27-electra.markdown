@@ -5,7 +5,6 @@ categories: [Paper Review, Language]
 tags: [bert,pretrain]
 seo:
   date_modified: 2020-09-27 20:07:02 +0800
-
 ---
 
 <img src="/assets/img/pr/electra/electraone.jpg">  
