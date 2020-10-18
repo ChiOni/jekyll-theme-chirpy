@@ -44,11 +44,13 @@ s eo:
 > >
 > > - Tomorrow I'm going to get up at 6
 >
-> Today라는 단어와 과거형의 표현을 함께 쓰는게 어색하다.  
+> Today라는 단어와 과거형의 표현을 함께 쓰는게 아직은 좀 어색하다.
 >
 > > **(실습)**
 > >
-> > I usually eat cereal for breakfast. But I ate rice and stew this morning. Tomorrow I'm not going to eat breakfast beacuase I'm goint to get up early.
+> > I usually eat cereal for breakfast. But I ate rice and stew this morning.  
+> >
+> > Tomorrow I'm not going to eat breakfast beacuase I'm goint to get up early.
 
 <br/>
 
