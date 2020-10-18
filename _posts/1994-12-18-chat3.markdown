@@ -9,17 +9,15 @@ s eo:
 
 # **영어 공부를 해보자**
 
+<br/>
+
 **소스** 
 
-[YouTube / 라이브 아카데미 / 연습 가이드](https://www.youtube.com/watch?v=Z6e7VifLQlI&list=PLIsIUJcT0HIU3r526hLOSkF3zAw7tqyx8&index=102)
+- [YouTube / 라이브 아카데미 / 연습 가이드](https://www.youtube.com/watch?v=Z6e7VifLQlI&list=PLIsIUJcT0HIU3r526hLOSkF3zAw7tqyx8&index=102)
 
-<br/>
+**방법**
 
-**방법** 
-
-강의 하나를 듣고, 그 날 배운 표현을 정리하고, 내 예문을 만들어서 외운다.
-
-<br/>
+- 강의 하나를 듣고, 그 날 배운 표현을 정리하고, 내 예문을 만들어서 외운다.
 
 **목차**
 
@@ -32,13 +30,31 @@ s eo:
 
 #### **연습가이드 #1 | Introduction** <a name="1"></a>
 
-CreateDate 2020.10.18
+> **CreateDate 2020.10.18**
+>
+> 말로 문장을 만들 때, 시제를 크게 중요하게 고려하지 않고 뱉어버릴 때가 많다.  
+>
+> 특히 나의 경우 be going to ~ 표현이 입 밖으로 잘 나오지 않는다.  
+>
+> > **(예제)**
+> >
+> > - I usually get up at 7
+> >
+> > - Today I got up at 8
+> >
+> > - Tomorrow I'm going to get up at 6
+>
+> Today라는 단어와 과거형의 표현을 함께 쓰는게 어색하다.  
+>
+> > **(실습)**
+> >
+> > I usually eat cereal for breakfast. But I ate rice and stew this morning. Tomorrow I'm not going to eat breakfast beacuase I'm goint to get up early.
 
 <br/>
 
-#### **연습가이드 #2 ~하려고 했는데 ~하게 됐다** <a name="2"></a>
+#### **연습가이드 #2 | ~하려고 했는데 ~하게 됐다** <a name="2"></a>
 
-CreateDate 2020.10.19
+> **CreateDate 2020.10.19**
 
 <br/>
 
