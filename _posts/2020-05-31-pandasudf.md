@@ -2,9 +2,9 @@
 title: Pandas UDF for PySpark (PySpark)
 date: 2020-05-31 00:00:00 +0800
 categories: [Tips for Working, PySpark]
-tags: [pyspark,pandas udf]
+tags: [pyspark, pandas udf]
 seo:
-  date_modified: 2020-05-31 13:20:52 +0900
+  date_modified: 2020-06-21 17:33:21 +0900
 ---
 
 <img src="/assets/img/wt/pandasudf/pandasudfone.jpg">  

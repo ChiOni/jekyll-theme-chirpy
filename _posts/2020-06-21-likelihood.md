@@ -2,9 +2,9 @@
 title: Likelihood Ratio Methods (Change Point Detection)
 date: 2020-06-21 00:00:00 +0800
 categories: [Code Excercise, Change Point Detection]
-tags: [change point,likelihood ratio]
+tags: [change point, likelihood ratio]
 seo:
-  date_modified: 2020-06-21 13:20:52 +0900
+  date_modified: 2020-07-18 14:17:37 +0900
 ---
 
 > In statistical analysis, **change detection** or **change point detection** tries to identify times when the probability distribution of a stochastic process or time series changes. In general the problem concerns both detecting whether or not a change has occurred, or whether several changes might have occurred, and identifying the times of any such changes.
