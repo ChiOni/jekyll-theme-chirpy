@@ -31,7 +31,7 @@ LSTM은 죽고 어텐션의 시대라고들 한다. 수 많은 Transformer의 �
 
 버트의 학습 과정은 (1) Pre-Training,  (2) Fine-Tuning 두 과정으로 나누어진다. 모델의 구조와 parameter 수는 그대로 유지한 채, 해결하는 과제만 바꾸는 것인데, 우선 pre-training을 보자.
 
-<img src="/assets/img/pr/electra/electrathree.jpg"> 
+<img src="/assets/img/pr/electra/electrathree.JPG"> 
 
 > BERT는 빈칸 맞추기, 어색한 문장 찾기. 두 가지 과제를 해결하며 Pre-Training한다.
 
@@ -125,7 +125,35 @@ ELECTRA의 학습 전략은 Generator가 noise를 인풋으로 받아 Disciminat
 
 결국에 Fine-Tuning을 진행할 때에는 전체 Electra에서 Generator 부분은 버리고 Discriminator 부분만 학습시킬 것이다. 그런데 Generator와 Discriminator의 parameter를 완전히 따로 업데이트한다고 생각하면, 기존의 BERT 모델과 대비하여 두 배나 커다란 모델을 학습한다고 볼 수 있다.  
 
-따라서 두 모듈이 같은 parameter를 공유하는 weight sharing 기법을 사용하게 된다. 논문에서는 generator의 크기를 discriminator와 대비하여 작게 만드는 것을 권유하기 때문에 embedding layer의 parameter를 공유하는 것을 제안한다.
+따라서 두 모듈이 같은 parameter를 공유하는 weight sharing 기법을 사용하게 된다. 논문에서는 generator의 크기를 discriminator와 대비하여 작게 만드는 것을 권유하기 때문에 embedding layer의 parameter를 공유하는 것을 제안한다.  
+
+<br/>
+
+Weight Sharing은 python 
+
+```python
+# weight-sharing이 되는 경우
+
+self.linear = nn.Linear(1, 1)
+
+def forward(self, x):
+    output = self.linear(x)
+    output = self.linear(output)
+    return output
+
+
+# 두 Layer가 different weights를 갖는 경우
+
+self.linear = nn.Linear(1, 1)
+self.linear1 = nn.Linear(1, 1)
+
+def forward(self, x):
+    output = self.linear(x)
+    output = self.linear1(output)
+    return output
+```
+
+
 
 <br/>
 
@@ -141,5 +169,5 @@ ELECTRA의 학습 전략은 Generator가 noise를 인풋으로 받아 Disciminat
 
 ## Source
 
-- http://jalammar.github.io/illustrated-bert/
+- [illustrated-bert](http://jalammar.github.io/illustrated-bert/)
 
