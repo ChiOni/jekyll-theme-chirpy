@@ -23,6 +23,8 @@ s eo:
 
 1. [연습가이드 #1 / Introduction](#1)
 2. [연습가이드 #2 / ~하려고 했는데 ~하게 됐다](#2)
+3. [연습가이드 #3 / 기본 시간표현 + 시제](#3)
+4. [연습가이드 #4 / 관거완료 시제](#4)
 
 <br/>
 
@@ -62,11 +64,11 @@ s eo:
 >
 > > **(예제 #1)**
 > >
-> > I was actually going to go to the movies with some friends and we were going to have lunch toghether but one of them suddenly had something to do so we just eneded up canceling the whole thing.
+> > I was actually going to go to the movies with some friends and we were going to have lunch toghether but one of them suddenly had something to do so we just ended up canceling the whole thing.
 >
 > - **was/were going to go**: 원래는
 > - **suddenly had something to do** 
-> - **eneded up ~ing**: 결국 ~하게 됬다. 
+> - **ended up ~ing**: 결국 ~하게 됬다. 
 >
 > > **(예제 #2)**
 > >
@@ -84,7 +86,9 @@ s eo:
 > > **(예제 #4)**
 > >
 > > I really wasn't going to eat any desert but the cake looked so good. I couldn't resist. I eneded up eating 3 pieces.
-> >
+>
+> <br/>
+>
 > > **(예제 #5)**
 > >
 > > I wasn't going to say anything but since you bring it up, I have something I want to ask you.
@@ -96,6 +100,117 @@ s eo:
 > > I was actually going to enroll in an academy for English conversation, but the youtube channel live academy looked so good, so I ended up subscribing this channel for English conversation.
 
 <br/>
+
+#### **연습가이드 #3 | 기본 시간표현 + 시제** <a name="3"></a>
+
+> **CreateDate 2020.10.25**
+>
+> **시제 (TENSE)에 대한** **Exercise Routine**
+>
+> 시제에 대한 멋진 표현들을 문법적으로는 익숙하게 받아들임에도 실제 회화에서는 적용하지 못하는 경우가 많다. 시제를 암기한다기보다는 연습할 수 있는 문장들을 통으로 외우도록 하자.
+>
+> 
+>
+> > **(예제 #1)**
+> >
+> > I **used to** eat only pepperoni pizza.
+> >
+> > But one day, a friend **said that I should** try a Hawaiian pizza.
+> >
+> > And so I did. And I liked it! It was really good!
+> >
+> > So, I **started eating** Hawaiian pizzas much more often.
+> >
+> > And **since then**, whenever I want a pizza,
+> >
+> > **I've been getting** the Hawaiian rather than the pepperoni.
+> >
+> > And **nowadays,** I only eat Hawaiian. I can't eat pizza without pineapple toppings. 
+>
+> - **used to:** 예전에 즐겨했다.
+> - **started ~ing:** ~하기 시작했다
+> - **nowaydays:** 요즘에는 
+>
+> 
+>
+> > **(실습)**
+> >
+> > I used to enjoy sweet drink at cafes.
+> >
+> > But one day, a friend said that sweet drinks does not feel fresh at all. And so I did.
+> >
+> > So, I started drinking americano much more often.
+> >
+> > And since then, whenever I go to cafes, I've been drinknig americano rather than the sweet drink.
+> >
+> > And nowadays, I only drink americano. I can't enjoy drink with sweet taste.
+
+<br/>
+
+#### **연습가이드 #4 | 관거완료 시제** <a name="4"></a>
+
+> **CreateDate 2020.10.26**
+>
+> - **just as I was about to:** 이제 막 ~하려던 순간에
+> - **just as I was + ing:** 이제 막 ~하고나서
+>
+> >  **(예제 #1)**
+> >
+> > This morning, I was at home, I **had just eaten** breakfast.
+> >
+> > **Just as I was about to** leave, I had to go to the bathroom really bad.
+>
+> <br/>
+>
+> > **(예제 #2)**
+> >
+> > Last night, I had just gotten off work. I was in front of my office building.
+> >
+> > And just as I was about to take the bus, I noticed that I didn't have my wallet with me.
+> >
+> > So I had to go back up to get it.
+>
+> <br/>
+>
+> > **(예제 #3)**
+> >
+> > A few days ago, I was in the school library.
+> >
+> > I had just finished my report. And just as I was trying to send it to my professor,
+> >
+> > I started having problems with my WI-FI connection!
+>
+> <br/>
+>
+> > **(예제 #4)**
+> >
+> > This morning, I was at home. I had just gotten up.
+> >
+> > And just as I was walking over to the bathroom,
+> >
+> > I heard mother talking to someone downstairs.
+>
+> <br/>
+>
+> > **(예제 #5)**
+> >
+> > 3 years ago, I had just graduated from school and just as I was getting ready to get a job,
+> >
+> > my uncle passed away.
+>
+> <br/>
+>
+> > **(실습)**
+> >
+> > This morning, I was at home. I had just taken a shower.
+> >
+> > And just as I was about to call my friend, 
+> >
+> > I checked the message that my friend suddenly had something to do. 
+> >
+> > So I just ended up taking a nap.
+
+
 
 
 
