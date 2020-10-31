@@ -25,6 +25,8 @@ s eo:
 2. [연습가이드 #2 / ~하려고 했는데 ~하게 됐다](#2)
 3. [연습가이드 #3 / 기본 시간표현 + 시제](#3)
 4. [연습가이드 #4 / 관거완료 시제](#4)
+5. [연습가이드 #5 / 일상적으로 말하기](#5)
+6. [연습가이드 #6 / must,might,could have](#6)
 
 <br/>
 
@@ -210,7 +212,55 @@ s eo:
 > >
 > > So I just ended up taking a nap.
 
+<br/>
 
+#### **연습가이드 #5 | 일상적으로 말하기** <a name="5"></a>
 
+> **CreateDate 2020.10.30**
+>
+> 이해는 한 번만! 연습은 백 번만!
+>
+> >  **(예제 #1)**
+> >
+> > Yesterday, I went to the department store. There was **a coat that I really liked.**
+> >
+> > The clerk **said that** it was the last one. **I could've just bought it** **right away.**
+> >
+> > **But I wanted to see if** there was anything better. 
+> >
+> > But I couldn't find anything better. 
+> >
+> > But **by the time** I went back to ther first store, 
+> >
+> > someone had already purchased that coat.
+> >
+> > I should have bought it when I had the chance.
+>
+> - **I could have just bought it right away:** 바로 ~ 할 수도 있었다
+> - **I wanted to see if:** 혹시 ~하지 않을지 보고 싶었다
+> - **by the time:** ~ 했을 때는
 
+<br/>
+
+#### **연습가이드 #6 | must,might,could have** <a name="6"></a>
+
+> **CreateDate 2020.10.31**
+>
+> > **(예제 #1)**
+> >
+> > One of my friends recently quit his job.
+> >
+> >  I don't know, he **must have had** some problems with his boss.
+> >
+> > Either that or, he **might have had** some health problems.
+> >
+> > Either way, it **couldn't have been** because he was sick and tired of the job.
+>
+> - **must have** (강한 가정)
+>   1. ~ 했나봐
+>   2. ~ 했던 모양이야 - you must have been hungry
+>   3.  **~ 했겠다** - you must have been really frustrated
+> - **might have** (약한 가정)
+>   1. 했(었)을 수도 있다
+>   2. 했던 것이었을 수도 있다
 

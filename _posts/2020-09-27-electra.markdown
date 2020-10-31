@@ -67,11 +67,9 @@ Fine-Tuning의 목적이 되는 많은 과제들은 **Question Answering (QA) an
 
 > [CLS] 나는 점심으로 치킨을 먹었다. [SEP] 간식으로는 아이스크림을 먹었다.
 
-그리고 마지막 Output Layer에서 [CLS] 토큰의 index에 튀어나온 벡터에 FC Layer를 조금 붙여 Y/N을 얻는다.
+그리고 마지막 Output Layer에서 [CLS] 토큰의 index에 튀어나온 벡터에 FC Layer를 조금 붙여 Y/N을 얻는다.  	
 
-<br/>
-
-이외에 여러 임베딩 기법이라던가 실험적인 부분들은 패스하고 오늘 리뷰하고자 하는 ELECTRA로 넘어가보자.
+이외에 여러 실험적인 부분들은 패스하고 오늘 리뷰하고자 하는 ELECTRA로 넘어가보자.
 
 
 
@@ -115,9 +113,9 @@ PRE-TRAINING 텍스트 인코더를 만들거다. 그런데 생성기가 아니�
 
 ELECTRA의 학습 전략은 Generator가 noise를 인풋으로 받아 Disciminator를 속일 수 있는 Output을 생성하며 똑똑해지고, Disciminator가 Generator의 생성 여부를 판단하며 똑똑해지는 과정을 반복하는 GAN과 유사하게 보이기도 한다. 그러나 ELECTRA가 GAN과 다른 세 가지 부분이 있는데,
 
-1. ELECTRA는 진짜 혹은 가짜를 구별하는 것이 아니라 정답 혹은 오답을 구별한다.
-2. Generator가 Discriminator를 얼마나 속였는지를 학습 목표로 삼는 Adversarially training 기법을 사용하지 않고 input을 잘 복원하는 maximum likelihood를 사용했다. Electra의 경우 masking index가 sampling되어 생성되기 때문에 학습 과정에서 adversarial loss를 사용하여 back-propogate하는데 어려움이 있다.
-3. Generator가 인풋으로 noise를 받지 않는다.
+1. ELECTRA는 진짜 혹은 가짜를 구별하는 것이 아니라 **정답 혹은 오답을 구별**한다.
+2. Generator가 Discriminator를 얼마나 속였는지를 학습 목표로 삼는 Adversarially training 기법을 사용하지 않고 input을 잘 복원하는 **maximum likelihood**를 사용했다. Electra의 경우 masking index가 sampling되어 생성되기 때문에 학습 과정에서 adversarial loss를 사용하여 back-propogate하는데 어려움이 있다.
+3. **Generator가 인풋으로 noise를 받지 않는다.**
 
 <br/>
 
@@ -174,7 +172,7 @@ class DynamicNet(torch.nn.Module):
 >
 > input layer - (1~3개 중 랜덤으로 한 사이즈의) middle layer - output layer를 거친다.
 >
-> 만약 동일한 크기의 로스가 발생한다면 middle layer가 두 겹일 때라 한 겹일 때가 다르게 업데이트 될까?
+> 동일한 크기의 로스가 발생한다면 middle layer가 두 겹일 때라 한 겹일 때가 다르게 업데이트 될까?
 
 <br/>
 
@@ -197,6 +195,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 <img src="/assets/img/pr/electra/electraseven.jpg"> 
 
 <center><small>모델은 정직하게 세 개의 Layer를 가진 형태로 보여진다.</small></center>
+<br/>
 
 ```python
 model_test1 = type(model)(D_in, H, D_out)
@@ -226,6 +225,8 @@ loss = criterion(y_pred,y)
 ### **Smaller Generator**
 
 <img src="/assets/img/pr/electra/electrasix.jpg"> 
+
+
 
 
 
