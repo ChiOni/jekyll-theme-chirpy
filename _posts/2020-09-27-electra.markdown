@@ -145,9 +145,23 @@ ELECTRA의 학습 전략은 Generator가 noise를 인풋으로 받아 Disciminat
 **[Pytorch Tutorial](https://tutorials.pytorch.kr/beginner/examples_nn/dynamic_net.html)을 통해 같은 Layer를 여러번 반복했을 때 무슨 일이 일어나는지 확인해보자**  
 
 ```python
-import random
 import torch
 
+class SimpleNet(torch.nn.Module):
+    def __init__(self, D_in, H, D_out):
+      
+        super(SimpleNet, self).__init__()
+        self.input_linear = torch.nn.Linear(D_in, H)
+        self.middle_linear = torch.nn.Linear(H, H)
+        self.output_linear = torch.nn.Linear(H, D_out)
+
+    def forward(self, x):
+      
+        h_relu = self.input_linear(x).clamp(min=0)
+        h_relu = self.middle_linear(h_relu).clamp(min=0)
+        y_pred = self.output_linear(h_relu)
+        return y_pred
+    
 class DynamicNet(torch.nn.Module):
     def __init__(self, D_in, H, D_out):
       
@@ -158,34 +172,30 @@ class DynamicNet(torch.nn.Module):
 
     def forward(self, x):
       
-        randint = range(random.randint(0, 3))
-        print(randint)
-        
         h_relu = self.input_linear(x).clamp(min=0)
-        for _ in range(randint):
+        for _ in range(3):
             h_relu = self.middle_linear(h_relu).clamp(min=0)
         y_pred = self.output_linear(h_relu)
         return y_pred
 ```
 
-> DynamicNet은 한 번 Input이 들어갈때마다  
+> DynamicNet은 한 번 Input이 들어가서 input layer - 3겹의 middle layer - output layer를 거친다.
 >
-> input layer - (1~3개 중 랜덤으로 한 사이즈의) middle layer - output layer를 거친다.
->
-> 동일한 크기의 로스가 발생한다면 middle layer가 두 겹일 때라 한 겹일 때가 다르게 업데이트 될까?
+> 동일한 크기의 로스가 발생한다면 `SimpleNet`과 `DynamicNet`이 다르게 업데이트 될까?
 
 <br/>
 
 ```python
 N, D_in, H, D_out = 64, 1000, 100, 10
 
+# 입력과 출력을 저장하기 위해 무작위 값을 갖는 Tensor를 생성합니다.
 x = torch.randn(N, D_in)
 y = torch.randn(N, D_out)
 
-model = DynamicNet(D_in, H, D_out)
+simple_model  = SimpleNet(D_in, H, D_out)
+dynamic_model = SimpleNet(D_in, H, D_out)
 
 criterion = torch.nn.MSELoss(reduction='sum')
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 ```
 
 > 가상의 Input, Output을 생성하고 업데이트 방식과 모델을 정의한다.
@@ -194,47 +204,53 @@ optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
 <img src="/assets/img/pr/electra/electraseven.jpg"> 
 
-<center><small>모델은 정직하게 세 개의 Layer를 가진 형태로 보여진다.</small></center>
-<br/>
-
-```python
-model_test1 = type(model)(D_in, H, D_out)
-model_test1.load_state_dict(model.state_dict())
-
-model_test2 = type(model)(D_in, H, D_out)
-model_test2.load_state_dict(model.state_dict())
-```
-
-> 실험을 위해 model을 카피한 두 개의 Test 모델을 생성한다.
+<center><small>두 모델의 구조가 같기 때문에 Parameter를 동일하게 초기화하는데 어려움은 없다.</small></center>
 
 <br/>
 
 ```python
-y_pred = model(x)
-loss = criterion(y_pred,y)
+pred = simple_model(x)
+
+for t in [simple_model, dynamic_model]:
+  
+    y_pred = t(x)
+    y_pred.data = pred.data
+
+    loss = criterion(y_pred, y)
+    optimizer = torch.optim.SGD(t.parameters(), lr=1e-1, momentum=0.9)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    
+    print(list(t.middle_linear.parameters())[0][0][:5])
 ```
 
 > middle_linear layer의 수에 따라서 loss가 다르게 나오기 때문에 기존 model로 고정된 loss를 생성
+>
+> > prediction output은 각 모델에 종속적이라서 prediction data만 골라서 복사해주는 방식이 아니라, simple_model의 output을 dynamic_model의 backward에 사용하면 에러가 발생한다.
 
 <br/>
 
+<img src="/assets/img/pr/electra/electreight.jpg"> 
 
+- 같은 크기의 loss에 대하여 middle layer의 파라미터가 다르게 업데이트 됬음
+- 즉 pytorch 내부적으로는 middle layer가 3번 업데이트를 수행하였다고 추측됨
+- 그렇다면 weight sharing을 수행한다는 것은 그렇지 않은 모델과  단순히 복잡성이 다른게 아니라 학습의 방향도 다르게 될 것 같은데, 문제는 없을까??
 
-
+<br/>
 
 ### **Smaller Generator**
 
 <img src="/assets/img/pr/electra/electrasix.jpg"> 
 
+- 가로축이 Generator의 Size.
+- Discriminator의 경우 size를 높일수록 성능이 명백하게 높다.
+- 그러나 Generator의 경우는 오히려 더 작은 사이즈일 때 스코어가 더 높게 나타나는 경우도 있다.
 
-
-
-
-
-
-
+<br/>
 
 ## Source
 
 - [illustrated-bert](http://jalammar.github.io/illustrated-bert/)
+- [paper](https://openreview.net/pdf?id=r1xMH1BtvB)
 
