@@ -5,8 +5,16 @@ categories: [Chat, Mathematics]
 tags: [automatic differentiantion,dual number]
 seo:
   date_modified: 2021-01-10 00:00:03 +0000
+use_math: true
 ---
 
-**컴퓨터는 어떻게 미분을 할까?**  
+```
+This formula $f(x) = x^2$ is an example.
+```
 
->  This formula $f(x) = x^2$ is an example.
+
+
+
+
+$f(x) = x^2$
+
