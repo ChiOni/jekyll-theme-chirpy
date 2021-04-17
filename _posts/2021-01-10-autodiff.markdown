@@ -56,3 +56,22 @@ $f(x)$를 x에 대하여 어떻게 미분하면 되는지 우리는 쉽게 대�
 
 예를들어 미분의 `곱셈 공식`을 symbolic 하게 구현하기 위해서는 기존에 존재하던 $h(x)$의 코드 길이보다 두 배나 긴 함수가 필요하다. 만약 $f(x)$가 $f(x) = u(x)v(x)$와 같이 다시 또 어떤 함수들의 곱으로 이루어졌다면, $h'(x)$를 구현하기 위해 끔찍한 길이의 `Symbol`이 정의되어야 한다.  
 
+<br/>
+
+#### **Automatic Differentiation**
+
+**Automatic** 방식은 함수의 연산 과정을 Flow 형태로 쪼갠다는 컨셉에서 시작한다.  
+
+Flow는 프로그램에 기본적으로 Symbolic하게 정의되어있는 연산들만을 사용하여 쪼개진다.  
+
+> $f(x_1,x_2) = [sin(\frac({x_1}{x_2}))+\frac({x_1}{x_2})-e^x_2] * [\frac({x_1}{x_2})-e^x_2]$
+>
+> $x_1, x_2$로 이루어진 $f(x)$는 아래와 같은 Flow로 쪼개진다.
+
+
+
+#### **참조**
+
+1. [(Youtube) What is Automatic differentiation](https://www.youtube.com/watch?v=wG_nF1awSSY)
+2. [CSC321 Lecture 10](https://www.cs.toronto.edu/~rgrosse/courses/csc321_2018/slides/lec10.pdf)
+3. [Algorithm for optimization Chapter 3](https://mitpress.mit.edu/books/algorithms-optimization)
