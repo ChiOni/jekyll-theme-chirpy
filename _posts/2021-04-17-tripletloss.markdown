@@ -9,10 +9,6 @@ use_math: true
 
 ---
 
-#### <b>Triplet Loss를 사용하여 집단간 상이도 확인</b>  
-
-
-
 **달리기를 잘하는 사람을 뽑고 싶습니다.** 그런데 잘함이라는 기준은 상대적인 것입니다.  
 
 나이에 비하여. 성별에 비하여. 신체 구조에 비하여.  
@@ -89,7 +85,6 @@ use_math: true
 <img src="/assets/img/wt/tripletloss/tripletloss4.jpg">  
 
 <center><small>달리기 속도는 1차원 값이기 때문에 알파 텀 X </small></center>
-
 <br/>
 
 - 각 기준이 몇 개의 그룹으로 전체 집단을 나누는가에 따라서 N의 개수는 달라질 수 있습니다.
