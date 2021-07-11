@@ -34,7 +34,7 @@ udf 좀 쓰자고 scala를 맨땅부터 배우는 건 너무 무섭습니다. sc
 **목차**
 
 1. Array Column min-max scale 해주기
-2. Array of Array Column 두 번째 값을 기준으로 정렬 해주기
+2. Array of Struct Column 특정 필드값을 기준으로 정렬 해주기
 3. String Column 에서 가장 많이 등장하는 단어 찾기  
 
 <br/>
@@ -43,7 +43,7 @@ udf 좀 쓰자고 scala를 맨땅부터 배우는 건 너무 무섭습니다. sc
 
 <img src="/assets/img/wt/scalaudf/scalaudf2.jpg">  
 
-데이터는 제가 최근 쳐물려있는 주식 종목들의 (종목 코드, 최근 5일 시세, 기업 개요) 로 하도록 하겠습니다.  
+데이터는 제가 최근 쳐물려있는 주식의 (종목 코드, 최근 5일 시세, 기업 개요) 로 하도록 하겠습니다.  
 
 <br/>
 
@@ -69,12 +69,12 @@ sqlContext.udf.register("lower", lower)
 
 python에서는 해당 노트북을 실행시켜주는 코드를 먼저 돌려줍니다.
 
-<img src="/assets/img/wt/scalaudf/scalaudf3.jpg">  
+<img src="/assets/img/wt/scalaudf/scalaudf3.JPG">  
 
 <center>짠!</center>
 <br/>
 
-#### <b>1. Array Column min-max Scale 해주기</b>
+#### <b>1. Array Column min-max Scale 해주기</b>  
 
 최근 5일 시세를 min max scale 해주도록 하겠습니다. 의미는 없습니다. 진정한 max는 지금부터니깐..  
 
@@ -86,8 +86,8 @@ scala의 경우에는 python과 마찬가지로 input의 타입을 꼭 미리 �
 
 ```scala
 // 함수명은 minMaxScale이라 정직하게 짓겠습니다.
-
-def minMaxScaler(Inp: Seq[Double]): Seq[Double] = {
+def minMaxScaler(Inp: Seq[Long]): Seq[Double] = {
+  		// pyspark에서 Array 타입이라고 되어있는 것은 scala에서 Seq라고 보면 됩니다.  
   
   var max_Inp = Inp.max
   var min_Inp = Inp.min
@@ -97,7 +97,7 @@ def minMaxScaler(Inp: Seq[Double]): Seq[Double] = {
     Array.fill(Inp.size)(0)
     
   } else {
-    // 조금 멍청한 방법인 것 같은데요, 우선 분자 부분의 (v - min)을 수행해주고, 
+    // 멍청한 방법인지는 잘 모르겠지만, 우선 분자 부분의 (v - min)을 해주고
     // 이후에 그 값들을 (max - min) 값으로 나눠줍니다. 
     Inp.map(_ - min_Inp).map(_.toFloat / (max_Inp - min_Inp))
   }
@@ -108,7 +108,32 @@ sqlContext.udf.register("minMaxScaler", minMaxScaler)
 
 scala는 함수의 마지막 표현이 곧 리턴하고 싶은 값을 의미합니다.  
 
+<img src="/assets/img/wt/scalaudf/scalaudf4.jpg">  
 
+<center>짠!</center>
 
-(작성중 .. )
+<br/>
+
+#### <b>2. Array of Struct 컬럼에서 특정 필드값으로 정렬해주기</b>  
+
+<img src="/assets/img/wt/scalaudf/scalaudf5.jpg">  
+
+저는 지금 `array_of_struct` 라는 이름의 컬럼을 하나 만들어주었습니다.  
+
+(1) 각 주식의 종목 코드와 스케일 한 가격을 Struct로 묶어준 뒤  
+
+(2) 하나의 Array로 만들어주는 작업을 해주었습니다.  
+
+이제 하고 싶은 것은 종목 코드를 기준으로 저 Array를 정렬해주는 것입니다.  
+
+<br/>
+
+```scala
+def sortByCode(Inp: Seq[Row]) = {
+    // scala에서 Row는 fields들의 collection을 의미합니다. (그냥 struct라고 봐도 될까?)
+    
+    
+    
+}
+```
 
